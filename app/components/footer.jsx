@@ -41,17 +41,17 @@ export default function Footer() {
           <div>
             <h3 className="text-white font-bold text-lg mb-6">{t.footer.contactInfo}</h3>
             <ul className="space-y-4">
-              <li className="flex items-start gap-3 text-gray-400">
-                <MapPin className="h-5 w-5 text-primary shrink-0" />
-                <span>123 Boulevard Mohammed VI, Casablanca, Morocco</span>
+              <li className="flex items-center gap-3 text-gray-400">
+                <Phone className="h-5 w-5 text-primary shrink-0" />
+                <span>+212 661-528619</span>
               </li>
               <li className="flex items-center gap-3 text-gray-400">
                 <Phone className="h-5 w-5 text-primary shrink-0" />
-                <span>+212 5 22 00 00 00</span>
+                <span>+212 661-528659</span>
               </li>
               <li className="flex items-center gap-3 text-gray-400">
                 <Mail className="h-5 w-5 text-primary shrink-0" />
-                <span>contact@fadlocar.ma</span>
+                <span>Melodylocation@gmail.com</span>
               </li>
             </ul>
           </div>
@@ -66,7 +66,7 @@ export default function Footer() {
                 <Facebook className="h-5 w-5" />
               </Link>
               <Link
-                href="#"
+                href="https://www.instagram.com/fadlocar/"
                 className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-primary hover:text-white transition-all"
               >
                 <Instagram className="h-5 w-5" />

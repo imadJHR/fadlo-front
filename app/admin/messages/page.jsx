@@ -20,7 +20,7 @@ export default function AdminMessagesPage() {
   // ---------------- Fetch Messages ----------------
   const fetchMessages = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/messages", {
+      const res = await fetch("https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/api/messages", {
         cache: "no-store",
       });
       const data = await res.json();
@@ -40,7 +40,7 @@ export default function AdminMessagesPage() {
     if (!confirm("Supprimer ce message ?")) return;
 
     try {
-      const res = await fetch(`http://localhost:5000/api/messages/${id}`, {
+      const res = await fetch(`https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/api/messages/${id}`, {
         method: "DELETE",
       });
       const data = await res.json();

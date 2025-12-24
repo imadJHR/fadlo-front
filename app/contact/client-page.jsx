@@ -26,7 +26,7 @@ export default function ContactClientPage() {
     setLoadingSubmit(true);
 
     try {
-      const res = await fetch("http://localhost:5000/api/messages", {
+      const res = await fetch("https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/api/messages", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, message }),

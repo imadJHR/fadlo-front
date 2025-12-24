@@ -29,7 +29,7 @@ export default function CheckoutPage() {
   const [loadingOrder, setLoadingOrder] = useState(false)
   const [orderSuccess, setOrderSuccess] = useState(false)
 
-  const API_URL = `http://localhost:5000/api/vehicules/${slug}`
+  const API_URL = `https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/api/vehicules/${slug}`
 
   // ------------------------ FETCH CAR ------------------------
   useEffect(() => {
@@ -59,7 +59,7 @@ export default function CheckoutPage() {
   const totalPrice = totalDays * (car?.prixParJour || 0)
 
   const getImageUrl = (img) =>
-    img ? `http://localhost:5000/${img.replace(/^\/+/, "")}` : "/placeholder-car.jpg"
+    img ? `https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/${img.replace(/^\/+/, "")}` : "/placeholder-car.jpg"
 
   // ------------------------ SEND ORDER ------------------------
   async function handleBooking() {
@@ -71,7 +71,7 @@ export default function CheckoutPage() {
     setLoadingOrder(true)
 
     try {
-      const res = await fetch("http://localhost:5000/api/orders", {
+      const res = await fetch("https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

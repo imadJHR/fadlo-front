@@ -19,8 +19,8 @@ export default function CarDetailClientPage() {
   const [mainImage, setMainImage] = useState(null)
   const [relatedCars, setRelatedCars] = useState([])
 
-  const API_URL = `http://localhost:5000/api/vehicules/${slug}`
-  const RELATED_URL = `http://localhost:5000/api/vehicules/related/${slug}`
+  const API_URL = `https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/api/vehicules/${slug}`
+  const RELATED_URL = `https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/api/vehicules/related/${slug}`
 
   useEffect(() => {
     if (!slug) return
@@ -58,7 +58,7 @@ export default function CarDetailClientPage() {
 
   const getImageUrl = (img) => {
     if (!img) return "/placeholder-car.jpg"
-    return `http://localhost:5000/${img.replace(/^\/+/, "")}`
+    return `https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/${img.replace(/^\/+/, "")}`
   }
 
   if (loading) {

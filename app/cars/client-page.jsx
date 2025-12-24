@@ -11,8 +11,8 @@ import { useLanguage } from "../components/language-provider";
 import { useSearchParams } from "next/navigation";
 
 export default function CarsClientPage() {
-  const API_URL = "http://localhost:5000/api/vehicules";
-  const BRAND_API_URL = "http://localhost:5000/api/brands";
+  const API_URL = "https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/api/vehicules";
+  const BRAND_API_URL = "https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/api/brands";
 
   const [cars, setCars] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -143,7 +143,7 @@ export default function CarsClientPage() {
      IMAGE URL FIX
   -------------------------------------------------- */
   const getImageUrl = (img) =>
-    img ? `http://localhost:5000/${img.replace(/^\/+/, "")}` : "";
+    img ? `https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/${img.replace(/^\/+/, "")}` : "";
 
   const categories = ["All", "SUV", "Berline", "Sport", "Citadine", "Utilitaire"];
 

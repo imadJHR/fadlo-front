@@ -6,7 +6,7 @@ export async function generateMetadata(props) {
   const { slug } = await props.params
 
   try {
-    const res = await fetch(`http://localhost:5000/api/vehicules/${slug}`, {
+    const res = await fetch(`https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/api/vehicules/${slug}`, {
       cache: "no-store",
     })
 
@@ -27,7 +27,7 @@ export async function generateMetadata(props) {
       openGraph: {
         title: `Checkout – ${car.nom}`,
         description: `Rent the ${car.nom} today. Premium service & best prices in Morocco.`,
-        images: [`http://localhost:5000/${car.images?.[0]}`],
+        images: [`https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/${car.images?.[0]}`],
       },
     }
   } catch (err) {
@@ -43,7 +43,7 @@ export default async function CheckoutPage(props) {
   if (!slug) return notFound()
 
   try {
-    const res = await fetch(`http://localhost:5000/api/vehicules/${slug}`, {
+    const res = await fetch(`https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/api/vehicules/${slug}`, {
       cache: "no-store",
     })
 

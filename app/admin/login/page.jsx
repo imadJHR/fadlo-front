@@ -26,7 +26,7 @@ export default function LoginPage() {
 
     setLoading(true);
 
-    const res = await fetch("http://localhost:5000/api/login", {
+    const res = await fetch("https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/api/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ code }),

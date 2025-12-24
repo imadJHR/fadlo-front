@@ -6,9 +6,9 @@ import { motion } from "framer-motion";
 import axios from "axios";
 
 export default function DashboardPage() {
-  const VEHICULES_URL = "http://localhost:5000/api/vehicules";
-  const ORDERS_URL = "http://localhost:5000/api/orders";
-  const MESSAGES_URL = "http://localhost:5000/api/messages";
+  const VEHICULES_URL = "https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/api/vehicules";
+  const ORDERS_URL = "https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/api/orders";
+  const MESSAGES_URL = "https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/api/messages";
 
   const [totalVehicules, setTotalVehicules] = useState(0);
   const [totalOrders, setTotalOrders] = useState(0);

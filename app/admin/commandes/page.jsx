@@ -22,7 +22,7 @@ export default function CommandesPage() {
   // ---------------- FETCH ORDERS ----------------
   const fetchOrders = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/orders", {
+      const res = await fetch("https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/api/orders", {
         headers: { Accept: "application/json" },
         cache: "no-store",
       });
@@ -48,7 +48,7 @@ export default function CommandesPage() {
   // ---------------- UPDATE STATUS ----------------
   const updateStatus = async (id, status) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/orders/${id}`, {
+      const res = await fetch(`https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/api/orders/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status }),
@@ -73,7 +73,7 @@ export default function CommandesPage() {
     if (!confirm("Supprimer cette commande ?")) return;
 
     try {
-      const res = await fetch(`http://localhost:5000/api/orders/${id}`, {
+      const res = await fetch(`https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/api/orders/${id}`, {
         method: "DELETE",
       });
 

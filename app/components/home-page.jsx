@@ -50,7 +50,7 @@ export default function HomePage() {
         FETCH VEHICLES
   ---------------------------------------------------- */
   useEffect(() => {
-    const API_URL = "http://localhost:5000/api/vehicules";
+    const API_URL = "https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/api/vehicules";
 
     fetch(API_URL)
       .then((res) => res.json())
@@ -71,7 +71,7 @@ export default function HomePage() {
         FETCH BRANDS
   ---------------------------------------------------- */
   useEffect(() => {
-    const API_URL = "http://localhost:5000/api/brands";
+    const API_URL = "https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/api/brands";
 
     fetch(API_URL)
       .then((res) => res.json())
@@ -86,7 +86,7 @@ export default function HomePage() {
   ---------------------------------------------------- */
   const getImageUrl = (img) => {
     if (!img) return "/placeholder-car.jpg";
-    return `http://localhost:5000/${img.replace(/^\/+/, "")}`;
+    return `https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/${img.replace(/^\/+/, "")}`;
   };
 
   return (

@@ -17,8 +17,8 @@ import axios from "axios";
 //  PAGE GESTION DES VÉHICULES & MARQUES
 // ================================================
 export default function VehiculesPage() {
-  const API_URL = "http://localhost:5000/api/vehicules";
-  const BRAND_API_URL = "http://localhost:5000/api/brands";
+  const API_URL = "https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/api/vehicules";
+  const BRAND_API_URL = "https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/api/brands";
 
   const token =
     typeof window !== "undefined"
@@ -53,7 +53,7 @@ export default function VehiculesPage() {
       clean = `uploads/${clean}`;
     }
 
-    return `http://localhost:5000/${clean}`;
+    return `https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/${clean}`;
   };
 
   // --------------------------------------------------
