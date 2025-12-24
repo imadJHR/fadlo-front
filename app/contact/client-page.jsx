@@ -39,6 +39,11 @@ export default function ContactClientPage() {
         setName("");
         setEmail("");
         setMessage("");
+        
+        // Reset success message after 5 seconds
+        setTimeout(() => {
+          setSuccess(false);
+        }, 5000);
       }
     } catch (err) {
       console.error("Contact error:", err);
@@ -48,18 +53,18 @@ export default function ContactClientPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#050505] text-white">
+    <main className="min-h-screen bg-[#050505] text-white overflow-x-hidden">
       <Navbar />
 
       {/* ------------------ HERO ------------------ */}
-      <section className="relative overflow-hidden pt-32 pb-24 px-6 text-center">
+      <section className="relative overflow-hidden pt-24 md:pt-32 pb-16 md:pb-24 px-4 sm:px-6 text-center">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/30 via-transparent to-transparent blur-3xl opacity-40" />
 
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-5xl md:text-6xl font-extrabold tracking-tight"
+          className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight px-2"
         >
           {t.contactPage.title}{" "}
           <span className="text-primary">{t.contactPage.titleSpan}</span>
@@ -69,58 +74,56 @@ export default function ContactClientPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.6 }}
-          className="mt-4 text-gray-400 max-w-xl mx-auto text-lg"
+          className="mt-4 md:mt-6 text-gray-400 max-w-xl mx-auto text-base sm:text-lg px-4"
         >
           {t.contactPage.description}
         </motion.p>
       </section>
 
       {/* ------------------ CONTACT CONTENT ------------------ */}
-      <section className="container mx-auto px-4 pb-28 grid grid-cols-1 lg:grid-cols-2 gap-16">
-
+      <section className="container mx-auto px-4 sm:px-6 pb-20 md:pb-28 grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-16">
         {/* LEFT SIDE – INFO CARDS */}
         <motion.div
           initial={{ opacity: 0, x: -25 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6 }}
-          className="space-y-10"
+          className="space-y-6 md:space-y-10"
         >
           {/* OFFICE */}
           <Card className="group bg-black/40 border-white/10 backdrop-blur-xl hover:border-primary/40 transition-all duration-300">
-            <CardContent className="p-6 flex items-start gap-5">
-              <div className="w-14 h-14 flex items-center justify-center rounded-2xl bg-white/5 group-hover:bg-primary/20 transition">
-                <MapPin className="h-7 w-7 text-primary" />
-
+            <CardContent className="p-4 sm:p-6 flex items-start gap-4 sm:gap-5">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center rounded-2xl bg-white/5 group-hover:bg-primary/20 transition flex-shrink-0">
+                <MapPin className="h-6 w-6 sm:h-7 sm:w-7 text-primary" />
               </div>
-              <div>
-                <h3 className="text-xl font-semibold mb-1">Location</h3>
-                <p className="text-gray-400">sidimaarouf Casablanca </p>
+              <div className="min-w-0">
+                <h3 className="text-lg sm:text-xl font-semibold mb-1 truncate">Location</h3>
+                <p className="text-gray-400 text-sm sm:text-base break-words">sidimaarouf Casablanca</p>
               </div>
             </CardContent>
           </Card>
+          
           {/* PHONE */}
           <Card className="group bg-black/40 border-white/10 backdrop-blur-xl hover:border-primary/40 transition-all duration-300">
-            <CardContent className="p-6 flex items-start gap-5">
-              <div className="w-14 h-14 flex items-center justify-center rounded-2xl bg-white/5 group-hover:bg-primary/20 transition">
-                <Phone className="h-7 w-7 text-primary" />
-
+            <CardContent className="p-4 sm:p-6 flex items-start gap-4 sm:gap-5">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center rounded-2xl bg-white/5 group-hover:bg-primary/20 transition flex-shrink-0">
+                <Phone className="h-6 w-6 sm:h-7 sm:w-7 text-primary" />
               </div>
-              <div>
-                <h3 className="text-xl font-semibold mb-1">phone</h3>
-                <p className="text-white">+212661528619</p>
+              <div className="min-w-0">
+                <h3 className="text-lg sm:text-xl font-semibold mb-1 truncate">Phone</h3>
+                <p className="text-white text-sm sm:text-base">+212661528619</p>
               </div>
             </CardContent>
           </Card>
 
           {/* EMAIL */}
           <Card className="group bg-black/40 border-white/10 backdrop-blur-xl hover:border-primary/40 transition-all duration-300">
-            <CardContent className="p-6 flex items-start gap-5">
-              <div className="w-14 h-14 flex items-center justify-center rounded-2xl bg-white/5 group-hover:bg-primary/20 transition">
-                <Mail className="h-7 w-7 text-primary" />
+            <CardContent className="p-4 sm:p-6 flex items-start gap-4 sm:gap-5">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center rounded-2xl bg-white/5 group-hover:bg-primary/20 transition flex-shrink-0">
+                <Mail className="h-6 w-6 sm:h-7 sm:w-7 text-primary" />
               </div>
-              <div>
-                <h3 className="text-xl font-semibold mb-1">Email</h3>
-                <p className="text-gray-400">fadlocarmaroc@gmail.com</p>
+              <div className="min-w-0">
+                <h3 className="text-lg sm:text-xl font-semibold mb-1 truncate">Email</h3>
+                <p className="text-gray-400 text-sm sm:text-base break-words">fadlocarmaroc@gmail.com</p>
               </div>
             </CardContent>
           </Card>
@@ -131,98 +134,102 @@ export default function ContactClientPage() {
           initial={{ opacity: 0, x: 25 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6 }}
-          className="bg-black/40 border border-white/10 rounded-2xl p-10 shadow-xl backdrop-blur-xl"
+          className="bg-black/40 border border-white/10 rounded-xl sm:rounded-2xl p-6 sm:p-8 md:p-10 shadow-xl backdrop-blur-xl"
         >
-          <h2 className="text-3xl font-bold mb-6">{t.contactPage.formTitle}</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">{t.contactPage.formTitle}</h2>
 
-          <form className="space-y-8" onSubmit={handleSubmit}>
-
+          <form className="space-y-6 md:space-y-8" onSubmit={handleSubmit}>
             {/* INPUTS */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
               <div>
-                <label className="text-gray-300 text-sm">{t.contactPage.name}</label>
+                <label className="text-gray-300 text-xs sm:text-sm">{t.contactPage.name}</label>
                 <Input
-                  className="mt-2 bg-black/40 border-white/10 text-white"
+                  className="mt-1 sm:mt-2 bg-black/40 border-white/10 text-white text-sm sm:text-base"
                   placeholder="John Doe"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
+                  required
                 />
               </div>
 
               <div>
-                <label className="text-gray-300 text-sm">{t.contactPage.email}</label>
+                <label className="text-gray-300 text-xs sm:text-sm">{t.contactPage.email}</label>
                 <Input
-                  className="mt-2 bg-black/40 border-white/10 text-white"
+                  className="mt-1 sm:mt-2 bg-black/40 border-white/10 text-white text-sm sm:text-base"
                   placeholder="john@example.com"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  required
                 />
               </div>
             </div>
 
             <div>
-              <label className="text-gray-300 text-sm">{t.contactPage.message}</label>
+              <label className="text-gray-300 text-xs sm:text-sm">{t.contactPage.message}</label>
               <Textarea
-                className="mt-2 bg-black/40 border-white/10 text-white min-h-[150px]"
+                className="mt-1 sm:mt-2 bg-black/40 border-white/10 text-white text-sm sm:text-base min-h-[120px] sm:min-h-[150px]"
                 placeholder={t.contactPage.description}
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
+                required
               />
             </div>
 
             {/* SUBMIT BUTTON */}
             <Button
-              className="w-full h-12 text-lg bg-primary hover:bg-primary/80 transition-all flex items-center justify-center gap-3"
+              className="w-full h-10 sm:h-12 text-base sm:text-lg bg-primary hover:bg-primary/80 transition-all flex items-center justify-center gap-2 sm:gap-3"
               type="submit"
               disabled={loadingSubmit}
             >
-              <Send className="w-5 h-5" />
+              <Send className="w-4 h-4 sm:w-5 sm:h-5" />
               {loadingSubmit ? t.contactPage.sending : t.contactPage.sendMessage}
             </Button>
 
             {success && (
-              <p className="text-green-400 text-center text-lg mt-3">
+              <motion.p
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-green-400 text-center text-sm sm:text-base md:text-lg mt-2 sm:mt-3 px-2"
+              >
                 {t.contactPage.successMessage}
-              </p>
+              </motion.p>
             )}
           </form>
         </motion.div>
       </section>
 
       {/* ------------------ EXCELLENCE SECTION ------------------ */}
-      <section className="container mx-auto px-4 py-28">
-        <div className="bg-gradient-to-b from-black/60 to-black/30 border border-white/10 rounded-3xl p-14 shadow-2xl backdrop-blur-xl">
-
-          <h2 className="text-4xl font-extrabold mb-8">
+      <section className="container mx-auto px-4 sm:px-6 py-16 md:py-28">
+        <div className="bg-gradient-to-b from-black/60 to-black/30 border border-white/10 rounded-xl sm:rounded-2xl md:rounded-3xl p-6 sm:p-8 md:p-14 shadow-2xl backdrop-blur-xl">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-6 md:mb-8">
             {t.contactPage.excellence.title}
           </h2>
 
-          <p className="text-gray-300 text-lg mb-10 leading-relaxed max-w-3xl">
+          <p className="text-gray-300 text-base sm:text-lg mb-8 md:mb-10 leading-relaxed max-w-3xl">
             {t.contactPage.excellence.intro}
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-            <div className="space-y-3">
-              <h3 className="text-xl font-bold">{t.contactPage.excellence.item1Title}</h3>
-              <p className="text-gray-400">{t.contactPage.excellence.item1Desc}</p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-10">
+            <div className="space-y-2 md:space-y-3">
+              <h3 className="text-lg sm:text-xl font-bold">{t.contactPage.excellence.item1Title}</h3>
+              <p className="text-gray-400 text-sm sm:text-base">{t.contactPage.excellence.item1Desc}</p>
             </div>
 
-            <div className="space-y-3">
-              <h3 className="text-xl font-bold">{t.contactPage.excellence.item2Title}</h3>
-              <p className="text-gray-400">{t.contactPage.excellence.item2Desc}</p>
+            <div className="space-y-2 md:space-y-3">
+              <h3 className="text-lg sm:text-xl font-bold">{t.contactPage.excellence.item2Title}</h3>
+              <p className="text-gray-400 text-sm sm:text-base">{t.contactPage.excellence.item2Desc}</p>
             </div>
 
-            <div className="space-y-3">
-              <h3 className="text-xl font-bold">{t.contactPage.excellence.item3Title}</h3>
-              <p className="text-gray-400">{t.contactPage.excellence.item3Desc}</p>
+            <div className="space-y-2 md:space-y-3">
+              <h3 className="text-lg sm:text-xl font-bold">{t.contactPage.excellence.item3Title}</h3>
+              <p className="text-gray-400 text-sm sm:text-base">{t.contactPage.excellence.item3Desc}</p>
             </div>
           </div>
 
-          <div className="mt-14 p-6 bg-primary/10 border border-primary/30 rounded-2xl text-center text-white text-xl font-semibold shadow-xl">
+          <div className="mt-10 md:mt-14 p-4 sm:p-6 bg-primary/10 border border-primary/30 rounded-xl sm:rounded-2xl text-center text-white text-base sm:text-lg md:text-xl font-semibold shadow-xl">
             {t.contactPage.excellence.finalNote}
           </div>
-
         </div>
       </section>
 
