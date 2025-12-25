@@ -1,6 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google"
 import "./globals.css"
 import { LanguageProvider } from "../app/components/language-provider"
+import Script from 'next/script' // Importez Script
 
 const geistSans = Geist({
   variable: "--font-sans",
@@ -33,6 +34,25 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} min-h-screen font-sans antialiased bg-background selection:bg-primary selection:text-white`}
       >
+        {/* Google Analytics Scripts */}
+        <Script
+          strategy="afterInteractive"
+          src="https://www.googletagmanager.com/gtag/js?id=G-45CWG9PB2H"
+        />
+        <Script
+          id="google-analytics"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+
+              gtag('config', 'G-45CWG9PB2H');
+            `,
+          }}
+        />
+        
         <div className="fixed inset-0 bg-gradient-to-br from-black via-[#1a0000] to-black -z-10" />
         <LanguageProvider>{children}</LanguageProvider>
       </body>
