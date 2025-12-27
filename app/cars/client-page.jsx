@@ -11,8 +11,10 @@ import { useLanguage } from "../components/language-provider";
 import { useSearchParams } from "next/navigation";
 
 export default function CarsClientPage() {
-  const API_URL = "https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/api/vehicules";
-  const BRAND_API_URL = "https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/api/brands";
+  const API_URL =
+    "https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/api/vehicules";
+  const BRAND_API_URL =
+    "https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/api/brands";
 
   const [cars, setCars] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -23,8 +25,8 @@ export default function CarsClientPage() {
   const [brands, setBrands] = useState([]);
   const [brandFilter, setBrandFilter] = useState("All");
 
-  // NEW STATE → AVAILABLE: All / Available / Unavailable
-  const [availability, setAvailability] = useState("Available");
+  // ✅ mieux: All par défaut (sinon tu caches les indisponibles)
+  const [availability, setAvailability] = useState("All");
 
   const { t } = useLanguage();
   const searchParams = useSearchParams();
@@ -35,14 +37,30 @@ export default function CarsClientPage() {
   const normalize = (str) => str?.trim().toLowerCase() || "";
 
   /* --------------------------------------------------
+     IMAGE URL FIX (Cloudinary + old local paths)
+  -------------------------------------------------- */
+  const getImageUrl = (img) => {
+    if (!img) return "";
+    if (typeof img !== "string") return "";
+
+    if (img.startsWith("http://") || img.startsWith("https://")) return img;
+    if (img.startsWith("//")) return `https:${img}`;
+
+    return `https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/${img.replace(
+      /^\/+/,
+      ""
+    )}`;
+  };
+
+  /* --------------------------------------------------
      FETCH BRANDS
   -------------------------------------------------- */
   useEffect(() => {
     const loadBrands = async () => {
       try {
-        const res = await fetch(BRAND_API_URL);
+        const res = await fetch(BRAND_API_URL, { cache: "no-store" });
         const data = await res.json();
-        if (data.success) setBrands(data.brands);
+        if (data.success) setBrands(data.brands || []);
       } catch (err) {
         console.error("Erreur fetch marques:", err);
       }
@@ -54,64 +72,54 @@ export default function CarsClientPage() {
   /* --------------------------------------------------
      FETCH + FILTER CARS
   -------------------------------------------------- */
-  const fetchCars = useCallback(
-    async (searchTerm, cat, brand, availabilityValue) => {
-      setLoading(true);
+  const fetchCars = useCallback(async (searchTerm, cat, brand, availabilityValue) => {
+    setLoading(true);
 
-      try {
-        const res = await fetch(API_URL);
-        const data = await res.json();
-        if (!data.success) return;
+    try {
+      const res = await fetch(API_URL, { cache: "no-store" });
+      const data = await res.json();
+      if (!data.success) return;
 
-        let list = data.vehicules;
+      let list = data.vehicules || [];
 
-        // 🔥 Availability filter
-        if (availabilityValue === "Available") {
-          list = list.filter((car) => car.disponible === true);
-        } else if (availabilityValue === "Unavailable") {
-          list = list.filter((car) => car.disponible === false);
-        }
+      // Availability filter
+      if (availabilityValue === "Available") {
+        list = list.filter((car) => car.disponible === true);
+      } else if (availabilityValue === "Unavailable") {
+        list = list.filter((car) => car.disponible === false);
+      } // "All" => pas de filtre
 
-        // SEARCH FILTER
-        if (searchTerm) {
-          const q = normalize(searchTerm);
-          list = list.filter(
-            (car) =>
-              normalize(car.nom).includes(q) ||
-              normalize(car.marque).includes(q)
-          );
-        }
-
-        // BRAND FILTER
-        if (brand && brand !== "All") {
-          list = list.filter(
-            (car) => normalize(car.marque) === normalize(brand)
-          );
-        }
-
-        // CATEGORY FILTER
-        if (cat && cat !== "All") {
-          list = list.filter(
-            (car) => normalize(car.type) === normalize(cat)
-          );
-        }
-
-        setCars(list);
-      } catch (error) {
-        console.error("Erreur chargement véhicules:", error);
-      } finally {
-        setLoading(false);
+      // SEARCH FILTER
+      if (searchTerm) {
+        const q = normalize(searchTerm);
+        list = list.filter(
+          (car) => normalize(car.nom).includes(q) || normalize(car.marque).includes(q)
+        );
       }
-    },
-    []
-  );
+
+      // BRAND FILTER
+      if (brand && brand !== "All") {
+        list = list.filter((car) => normalize(car.marque) === normalize(brand));
+      }
+
+      // CATEGORY FILTER
+      if (cat && cat !== "All") {
+        list = list.filter((car) => normalize(car.type) === normalize(cat));
+      }
+
+      setCars(list);
+    } catch (error) {
+      console.error("Erreur chargement véhicules:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   /* --------------------------------------------------
      APPLY URL SEARCH PARAM
   -------------------------------------------------- */
   useEffect(() => {
     if (searchFromURL) setSearch(searchFromURL);
-
     fetchCars(searchFromURL, category, brandFilter, availability);
   }, [searchFromURL, fetchCars]);
 
@@ -120,7 +128,6 @@ export default function CarsClientPage() {
   -------------------------------------------------- */
   useEffect(() => {
     if (brandFromURL) setBrandFilter(brandFromURL);
-
     fetchCars(searchFromURL || search, category, brandFromURL || brandFilter, availability);
   }, [brandFromURL, fetchCars]);
 
@@ -139,18 +146,12 @@ export default function CarsClientPage() {
     fetchCars(search, category, brandFilter, availability);
   };
 
-  /* --------------------------------------------------
-     IMAGE URL FIX
-  -------------------------------------------------- */
-  const getImageUrl = (img) =>
-    img ? `https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/${img.replace(/^\/+/, "")}` : "";
-
   const categories = ["All", "SUV", "Berline", "Sport", "Citadine", "Utilitaire"];
 
   const availabilityOptions = [
     { value: "All", label: "Tous" },
     { value: "Available", label: "Disponible" },
-    { value: "Unavailable", label: "Indisponible" }
+    { value: "Unavailable", label: "Indisponible" },
   ];
 
   return (
@@ -159,8 +160,7 @@ export default function CarsClientPage() {
 
       <div className="container mx-auto px-4 py-12">
         <h1 className="text-3xl sm:text-4xl font-bold text-white mb-10">
-          {t.carsPage.title}{" "}
-          <span className="text-primary">{t.carsPage.titleSpan}</span>
+          {t.carsPage.title} <span className="text-primary">{t.carsPage.titleSpan}</span>
         </h1>
 
         {/* BRAND FILTER */}
@@ -185,8 +185,13 @@ export default function CarsClientPage() {
                     ? "border-primary bg-primary/10"
                     : "border-white/10 bg-white"
                 }`}
+                title={b.title}
               >
-                <img src={getImageUrl(b.image)} className="w-10 h-10 object-contain" />
+                <img
+                  src={getImageUrl(b.image)}
+                  alt={b.title}
+                  className="w-10 h-10 object-contain"
+                />
               </button>
             ))}
           </div>
@@ -206,7 +211,7 @@ export default function CarsClientPage() {
           ))}
         </div>
 
-        {/* AVAILABILITY FILTER (NEW) */}
+        {/* AVAILABILITY FILTER */}
         <div className="flex flex-wrap gap-2 mb-12">
           {availabilityOptions.map((opt) => (
             <Button
@@ -246,9 +251,7 @@ export default function CarsClientPage() {
         )}
 
         {!loading && cars.length === 0 && (
-          <p className="text-center text-gray-400 py-16">
-            Aucun véhicule trouvé.
-          </p>
+          <p className="text-center text-gray-400 py-16">Aucun véhicule trouvé.</p>
         )}
       </div>
 

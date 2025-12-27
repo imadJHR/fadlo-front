@@ -6,8 +6,6 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import {
   Calendar as CalendarIcon,
-  MapPin,
-  Clock,
   Search,
   Shield,
   Trophy,
@@ -24,11 +22,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { useLanguage } from "../components/language-provider";
 
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
@@ -50,19 +44,20 @@ export default function HomePage() {
         FETCH VEHICLES
   ---------------------------------------------------- */
   useEffect(() => {
-    const API_URL = "https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/api/vehicules";
+    const API_URL =
+      "https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/api/vehicules";
 
     fetch(API_URL)
       .then((res) => res.json())
       .then((data) => {
         if (!data.success) return;
 
-        const featured = data.vehicules.filter(
+        const featured = (data.vehicules || []).filter(
           (car) => car.vedette === true && car.disponible === true
         );
 
         setFeaturedCars(featured);
-        setAllCars(data.vehicules.slice(0, 6));
+        setAllCars((data.vehicules || []).slice(0, 6));
       })
       .catch((err) => console.error("Erreur API véhicules :", err));
   }, []);
@@ -71,22 +66,36 @@ export default function HomePage() {
         FETCH BRANDS
   ---------------------------------------------------- */
   useEffect(() => {
-    const API_URL = "https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/api/brands";
+    const API_URL =
+      "https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/api/brands";
 
     fetch(API_URL)
       .then((res) => res.json())
       .then((data) => {
-        if (data.success) setBrands(data.brands);
+        if (data.success) setBrands(data.brands || []);
       })
       .catch((err) => console.error("Erreur API marques :", err));
   }, []);
 
   /* ----------------------------------------------------
         FORMAT IMAGE URLs
+        ✅ Supports Cloudinary full URLs + old local paths
   ---------------------------------------------------- */
   const getImageUrl = (img) => {
     if (!img) return "/placeholder-car.jpg";
-    return `https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/${img.replace(/^\/+/, "")}`;
+    if (typeof img !== "string") return "/placeholder-car.jpg";
+
+    // Cloudinary (or any absolute URL)
+    if (img.startsWith("http://") || img.startsWith("https://")) return img;
+
+    // protocol-relative URL
+    if (img.startsWith("//")) return `https:${img}`;
+
+    // old mode: local path served by your backend (if you still have some old records)
+    return `https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/${img.replace(
+      /^\/+/,
+      ""
+    )}`;
   };
 
   return (
@@ -164,23 +173,18 @@ export default function HomePage() {
           >
             <Card className="bg-black/80 backdrop-blur-xl border-white/10 shadow-2xl shadow-primary/10">
               <CardContent className="p-6 lg:p-8">
-                
-                {/* UPDATED SEARCH FORM */}
                 <form
                   onSubmit={(e) => {
                     e.preventDefault();
                     const params = new URLSearchParams();
 
-                    if (pickupDate)
-                      params.set("pickup", pickupDate.toISOString());
-                    if (returnDate)
-                      params.set("return", returnDate.toISOString());
+                    if (pickupDate) params.set("pickup", pickupDate.toISOString());
+                    if (returnDate) params.set("return", returnDate.toISOString());
 
                     router.push(`/cars?${params.toString()}`);
                   }}
                   className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6"
                 >
-                  
                   <CalendarSelect
                     label={t.search.pickupDate}
                     value={pickupDate}
@@ -200,7 +204,6 @@ export default function HomePage() {
                     </Button>
                   </div>
                 </form>
-
               </CardContent>
             </Card>
           </motion.div>
@@ -332,9 +335,7 @@ export default function HomePage() {
                   key={index}
                   className="flex-shrink-0 cursor-pointer"
                   onClick={() =>
-                    router.push(
-                      `/cars?brand=${encodeURIComponent(brand.title)}`
-                    )
+                    router.push(`/cars?brand=${encodeURIComponent(brand.title)}`)
                   }
                 >
                   <div className="w-28 h-28 bg-white rounded-xl shadow-md flex items-center justify-center hover:bg-primary/20 transition-all">
@@ -433,10 +434,7 @@ function CalendarSelect({ label, value, onChange }) {
           </Button>
         </PopoverTrigger>
 
-        <PopoverContent
-          className="w-auto p-0 bg-black border-white/10"
-          align="start"
-        >
+        <PopoverContent className="w-auto p-0 bg-black border-white/10" align="start">
           <Calendar
             mode="single"
             selected={value}

@@ -8,19 +8,31 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { useLanguage } from "../components/language-provider"
 
-const API_BASE = "https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/"
+const API_BASE = "https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws"
 
 export default function CarCard({ car, index = 0 }) {
   const { t } = useLanguage()
 
+  // ✅ Cloudinary-ready + legacy local path support
   const getImageUrl = (img) => {
-    if (!img) return "/placeholder-car.jpg"
-    if (/^https?:\/\//i.test(img)) return img
-    const clean = img.replace(/^\/+/ , "").replace(/\\/g, "/")
+    if (!img || typeof img !== "string") return "/placeholder-car.jpg"
+
+    // Absolute URL (Cloudinary)
+    if (img.startsWith("http://") || img.startsWith("https://")) return img
+
+    // Protocol-relative URL
+    if (img.startsWith("//")) return `https:${img}`
+
+    // Legacy path stored in DB: "uploads/vehicules/xxx.jpg"
+    const clean = img.replace(/^\/+/, "").replace(/\\/g, "/")
     return `${API_BASE}/${clean}`
   }
 
-  const rawImage = car.image || (Array.isArray(car.images) ? car.images[0] : null)
+  // car.image may already be a full URL (HomePage passes it)
+  const rawImage =
+    car.image ||
+    (Array.isArray(car.images) && car.images.length > 0 ? car.images[0] : null)
+
   const imageUrl = getImageUrl(rawImage)
 
   const name = car.nom || car.name || "Unnamed Car"
@@ -32,6 +44,8 @@ export default function CarCard({ car, index = 0 }) {
   const transmission = car.specifications?.transmission ?? "--"
   const fuel = car.specifications?.fuel ?? "--"
 
+  const isAvailable = car.disponible === true
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -39,7 +53,6 @@ export default function CarCard({ car, index = 0 }) {
       transition={{ duration: 0.6, delay: index * 0.08 }}
     >
       <Card className="relative overflow-hidden group h-full flex flex-col rounded-3xl border-white/10 bg-gradient-to-br from-zinc-900/60 to-zinc-800/40 backdrop-blur-xl shadow-xl hover:shadow-2xl transition-all duration-500">
-
         {/* Decorative Glow */}
         <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
@@ -55,6 +68,10 @@ export default function CarCard({ car, index = 0 }) {
             alt={name}
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[800ms]"
             whileHover={{ rotate: 0.3 }}
+            onError={(e) => {
+              // fallback if URL broken
+              e.currentTarget.src = "/placeholder-car.jpg"
+            }}
           />
 
           {/* Badge */}
@@ -71,23 +88,29 @@ export default function CarCard({ car, index = 0 }) {
             </h3>
 
             <div className="text-right">
-              <p className="text-3xl font-extrabold text-primary drop-shadow-lg">€{price}</p>
+              <p className="text-3xl font-extrabold text-primary drop-shadow-lg">
+                €{price}
+              </p>
               <p className="text-xs text-gray-400">{t.carsPage.perDay}</p>
             </div>
           </div>
 
           {/* Stats */}
           <div className="grid grid-cols-3 gap-4 mt-6">
-            {[{
-              icon: <Users className="h-5 w-5" />,
-              label: `${seats} ${t.carsPage.seats}`
-            },{
-              icon: <Gauge className="h-5 w-5" />,
-              label: transmission
-            },{
-              icon: <Fuel className="h-5 w-5" />,
-              label: fuel
-            }].map((item, i) => (
+            {[
+              {
+                icon: <Users className="h-5 w-5" />,
+                label: `${seats} ${t.carsPage.seats}`,
+              },
+              {
+                icon: <Gauge className="h-5 w-5" />,
+                label: transmission,
+              },
+              {
+                icon: <Fuel className="h-5 w-5" />,
+                label: fuel,
+              },
+            ].map((item, i) => (
               <motion.div
                 key={i}
                 className="flex flex-col items-center gap-2 text-gray-300"
@@ -103,24 +126,31 @@ export default function CarCard({ car, index = 0 }) {
 
         {/* Disponibilité */}
         <p
-          className={`${car.disponible ? "text-green-400" : "text-red-500"} text-center mb-2 text-sm font-medium tracking-wide`}
+          className={`${
+            isAvailable ? "text-green-400" : "text-red-500"
+          } text-center mb-2 text-sm font-medium tracking-wide`}
         >
-          {car.disponible ? "Disponible" : "Non disponible"}
+          {isAvailable ? "Disponible" : "Non disponible"}
         </p>
 
         {/* CTA */}
         <CardFooter className="p-6 pt-0">
           <Button
-            asChild={!car.disponible}
-            disabled={!car.disponible}
+            asChild={isAvailable}
+            disabled={!isAvailable}
             className={`w-full rounded-full py-5 shadow-lg transition-all duration-300 text-white text-lg tracking-wide
-              ${car.disponible
-                ? "bg-primary/80 hover:bg-primary hover:scale-[1.02]"
-                : "bg-gray-600/40 text-gray-400 cursor-not-allowed"}
+              ${
+                isAvailable
+                  ? "bg-primary/80 hover:bg-primary hover:scale-[1.02]"
+                  : "bg-gray-600/40 text-gray-400 cursor-not-allowed"
+              }
             `}
           >
-            {car.disponible ? (
-              <Link href={slug ? `/cars/${slug}` : "#"} className="flex items-center justify-center gap-2">
+            {isAvailable ? (
+              <Link
+                href={slug ? `/cars/${slug}` : "#"}
+                className="flex items-center justify-center gap-2"
+              >
                 {t.carsPage.rentNow}
                 <ArrowRight className="h-5 w-5" />
               </Link>

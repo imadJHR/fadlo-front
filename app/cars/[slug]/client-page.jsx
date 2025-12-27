@@ -56,9 +56,22 @@ export default function CarDetailClientPage() {
     fetchCar().then(fetchRelated)
   }, [slug])
 
+  // ✅ Updated: supports Cloudinary full URLs + old local paths
   const getImageUrl = (img) => {
     if (!img) return "/placeholder-car.jpg"
-    return `https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/${img.replace(/^\/+/, "")}`
+    if (typeof img !== "string") return "/placeholder-car.jpg"
+
+    // already a full URL (Cloudinary, etc.)
+    if (img.startsWith("http://") || img.startsWith("https://")) return img
+
+    // protocol-relative URL
+    if (img.startsWith("//")) return `https:${img}`
+
+    // old mode (local path served by your backend)
+    return `https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/${img.replace(
+      /^\/+/,
+      ""
+    )}`
   }
 
   if (loading) {
@@ -82,9 +95,8 @@ export default function CarDetailClientPage() {
       <Navbar />
 
       <div className="container mx-auto px-4 max-w-7xl">
-
         {/* BACK BUTTON */}
-        <Link 
+        <Link
           href="/cars"
           className="inline-flex items-center text-gray-300 hover:text-white mb-6 transition text-sm md:text-base"
         >
@@ -138,10 +150,15 @@ export default function CarDetailClientPage() {
         </div>
 
         {/* SPECIFICATIONS */}
-        <h2 className="text-2xl md:text-3xl font-semibold mb-6">{t.carsPage.features}</h2>
+        <h2 className="text-2xl md:text-3xl font-semibold mb-6">
+          {t.carsPage.features}
+        </h2>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-14">
-          <SpecBox icon={<Users />} label={`${car.specifications?.seats} ${t.carsPage.seats}`} />
+          <SpecBox
+            icon={<Users />}
+            label={`${car.specifications?.seats ?? ""} ${t.carsPage.seats}`}
+          />
           <SpecBox icon={<Gauge />} label={car.specifications?.transmission} />
           <SpecBox icon={<Fuel />} label={car.specifications?.fuel} />
           <SpecBox icon={<></>} label={car.type} big />
@@ -151,7 +168,9 @@ export default function CarDetailClientPage() {
         <div className="flex flex-col md:flex-row justify-between items-center mb-16 gap-6">
           <div className="text-3xl md:text-4xl font-bold text-primary">
             €{car.prixParJour}
-            <span className="text-sm text-gray-400 ml-2">{t.carsPage.perDay}</span>
+            <span className="text-sm text-gray-400 ml-2">
+              {t.carsPage.perDay}
+            </span>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
@@ -165,6 +184,7 @@ export default function CarDetailClientPage() {
             <a
               href={`https://wa.me/212645288216?text=Hello, I want to rent the ${car.nom}`}
               target="_blank"
+              rel="noreferrer"
               className="px-6 py-3 rounded-lg bg-green-600 hover:bg-green-700 text-white text-lg font-semibold w-full sm:w-auto text-center"
             >
               {t.carsPage.whatsapp}
@@ -172,7 +192,7 @@ export default function CarDetailClientPage() {
           </div>
         </div>
 
-        {/* ⭐⭐⭐ RELATED CARS SECTION ⭐⭐⭐ */}
+        {/* RELATED CARS */}
         {relatedCars.length > 0 && (
           <section className="mt-20 mb-20">
             <h2 className="text-3xl md:text-4xl font-bold mb-10">
@@ -202,7 +222,9 @@ export default function CarDetailClientPage() {
 
                     <p className="text-primary text-lg font-bold mt-3">
                       €{rc.prixParJour}
-                      <span className="text-gray-400 text-sm ml-2">{t.carsPage.perDay}</span>
+                      <span className="text-gray-400 text-sm ml-2">
+                        {t.carsPage.perDay}
+                      </span>
                     </p>
                   </div>
                 </Link>
@@ -213,7 +235,6 @@ export default function CarDetailClientPage() {
 
         {/* WHY FADLO CAR SECTION */}
         <section className="mt-20 bg-gradient-to-b from-black to-black/90 rounded-2xl p-6 md:p-10 border border-white/10 shadow-xl">
-
           <h2 className="text-3xl md:text-4xl font-extrabold text-center mb-4">
             <span className="text-primary">FADLO CAR</span> — {t.whyFadloCar.title}
           </h2>
@@ -236,7 +257,6 @@ export default function CarDetailClientPage() {
             </p>
           </div>
         </section>
-
       </div>
 
       <Footer />
@@ -249,7 +269,9 @@ function SpecBox({ icon, label, big = false }) {
   return (
     <div className="spec-box flex flex-col items-center justify-center text-center bg-white/5 backdrop-blur-md border border-white/10 p-4 rounded-xl">
       {icon && <div className="h-7 w-7 mb-2 text-white">{icon}</div>}
-      <p className={`text-sm md:text-lg ${big ? "font-bold text-xl" : ""}`}>{label}</p>
+      <p className={`text-sm md:text-lg ${big ? "font-bold text-xl" : ""}`}>
+        {label}
+      </p>
     </div>
   )
 }

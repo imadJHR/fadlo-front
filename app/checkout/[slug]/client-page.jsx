@@ -29,10 +29,21 @@ export default function CheckoutPage() {
   const [loadingOrder, setLoadingOrder] = useState(false)
   const [orderSuccess, setOrderSuccess] = useState(false)
 
-  const API_URL = `https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/api/vehicules/${slug}`
+  const API_BASE = "https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws"
+  const API_URL = `${API_BASE}/api/vehicules/${slug}`
+
+  // ✅ Cloudinary-ready + legacy local path support
+  const getImageUrl = (img) => {
+    if (!img || typeof img !== "string") return "/placeholder-car.jpg"
+    if (img.startsWith("http://") || img.startsWith("https://")) return img
+    if (img.startsWith("//")) return `https:${img}`
+    return `${API_BASE}/${img.replace(/^\/+/, "").replace(/\\/g, "/")}`
+  }
 
   // ------------------------ FETCH CAR ------------------------
   useEffect(() => {
+    if (!slug) return
+
     const fetchCar = async () => {
       try {
         const res = await fetch(API_URL, { cache: "no-store" })
@@ -58,9 +69,6 @@ export default function CheckoutPage() {
   const totalDays = calculateDays()
   const totalPrice = totalDays * (car?.prixParJour || 0)
 
-  const getImageUrl = (img) =>
-    img ? `https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/${img.replace(/^\/+/, "")}` : "/placeholder-car.jpg"
-
   // ------------------------ SEND ORDER ------------------------
   async function handleBooking() {
     if (!fullName || !email || !phone || !pickupDate || !returnDate) {
@@ -71,7 +79,7 @@ export default function CheckoutPage() {
     setLoadingOrder(true)
 
     try {
-      const res = await fetch("https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/api/orders", {
+      const res = await fetch(`${API_BASE}/api/orders`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -79,8 +87,8 @@ export default function CheckoutPage() {
           fullName,
           email,
           phone,
-          pickupDate,
-          returnDate,
+          pickupDate: pickupDate.toISOString(),
+          returnDate: returnDate.toISOString(),
           totalDays,
           totalPrice,
         }),
@@ -91,23 +99,33 @@ export default function CheckoutPage() {
       if (data.success) {
         setOrderSuccess(true)
       } else {
-        alert("Erreur lors de la réservation.")
+        alert(data.message || "Erreur lors de la réservation.")
       }
     } catch (err) {
       console.error(err)
       alert("Erreur serveur.")
+    } finally {
+      setLoadingOrder(false)
     }
-
-    setLoadingOrder(false)
   }
 
   // ------------------------ UI ------------------------
 
-  if (loading)
-    return <div className="min-h-screen flex items-center justify-center text-white">Loading...</div>
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-white">
+        Loading...
+      </div>
+    )
+  }
 
-  if (!car)
-    return <div className="min-h-screen flex items-center justify-center text-white">Car not found</div>
+  if (!car) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-white">
+        Car not found
+      </div>
+    )
+  }
 
   return (
     <main className="min-h-screen bg-black text-white pt-28">
@@ -125,32 +143,48 @@ export default function CheckoutPage() {
         )}
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-
           {/* ---------------- CAR SUMMARY ---------------- */}
           <div className="bg-white/5 border border-white/10 p-6 rounded-xl shadow-xl">
-            <img src={getImageUrl(car.images?.[0])} className="w-full h-48 object-cover rounded-lg mb-4" />
+            <img
+              src={getImageUrl(car.images?.[0])}
+              className="w-full h-48 object-cover rounded-lg mb-4"
+              alt={car.nom}
+              onError={(e) => {
+                e.currentTarget.src = "/placeholder-car.jpg"
+              }}
+            />
 
             <h2 className="text-2xl font-bold">{car.nom}</h2>
 
-            <p className="text-gray-300 mt-2"><strong>{t.carsPage.seats}:</strong> {car.specifications?.seats}</p>
-            <p className="text-gray-300"><strong>{t.carsPage.transmission}:</strong> {car.specifications?.transmission}</p>
-            <p className="text-gray-300"><strong>{t.carsPage.fuel}:</strong> {car.specifications?.fuel}</p>
+            <p className="text-gray-300 mt-2">
+              <strong>{t.carsPage.seats}:</strong> {car.specifications?.seats}
+            </p>
+            <p className="text-gray-300">
+              <strong>{t.carsPage.transmission}:</strong>{" "}
+              {car.specifications?.transmission}
+            </p>
+            <p className="text-gray-300">
+              <strong>{t.carsPage.fuel}:</strong> {car.specifications?.fuel}
+            </p>
 
             <p className="text-primary text-3xl font-bold mt-4">
-              €{car.prixParJour} <span className="text-sm">{t.carsPage.perDay}</span>
+              €{car.prixParJour}{" "}
+              <span className="text-sm">{t.carsPage.perDay}</span>
             </p>
           </div>
 
           {/* ---------------- CHECKOUT FORM ---------------- */}
           <div className="lg:col-span-2 bg-white/5 border border-white/10 p-8 rounded-xl shadow-xl">
-
-            <h2 className="text-2xl font-semibold mb-6">{t.checkout.description}</h2>
+            <h2 className="text-2xl font-semibold mb-6">
+              {t.checkout.description}
+            </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
               {/* NAME */}
               <div>
-                <label className="block text-gray-300 mb-2">{t.checkout.fullName}</label>
+                <label className="block text-gray-300 mb-2">
+                  {t.checkout.fullName}
+                </label>
                 <input
                   type="text"
                   className="w-full p-3 rounded-lg bg-black/40 border border-white/20"
@@ -161,7 +195,9 @@ export default function CheckoutPage() {
 
               {/* EMAIL */}
               <div>
-                <label className="block text-gray-300 mb-2">{t.checkout.email}</label>
+                <label className="block text-gray-300 mb-2">
+                  {t.checkout.email}
+                </label>
                 <input
                   type="email"
                   className="w-full p-3 rounded-lg bg-black/40 border border-white/20"
@@ -172,7 +208,9 @@ export default function CheckoutPage() {
 
               {/* PHONE */}
               <div>
-                <label className="block text-gray-300 mb-2">{t.checkout.phone}</label>
+                <label className="block text-gray-300 mb-2">
+                  {t.checkout.phone}
+                </label>
                 <input
                   type="text"
                   className="w-full p-3 rounded-lg bg-black/40 border border-white/20"
@@ -183,13 +221,17 @@ export default function CheckoutPage() {
 
               {/* PICKUP DATE */}
               <div>
-                <label className="block text-gray-300 mb-2">{t.search.pickupDate}</label>
+                <label className="block text-gray-300 mb-2">
+                  {t.search.pickupDate}
+                </label>
 
                 <Popover>
                   <PopoverTrigger asChild>
                     <button className="w-full p-3 pl-10 rounded-lg bg-black/40 border border-white/20 flex items-center text-left">
                       <CalendarIcon className="mr-2 text-gray-400" />
-                      {pickupDate ? format(pickupDate, "dd/MM/yyyy") : t.search.pickupDate}
+                      {pickupDate
+                        ? format(pickupDate, "dd/MM/yyyy")
+                        : t.search.pickupDate}
                     </button>
                   </PopoverTrigger>
 
@@ -206,13 +248,17 @@ export default function CheckoutPage() {
 
               {/* RETURN DATE */}
               <div>
-                <label className="block text-gray-300 mb-2">{t.search.returnDate}</label>
+                <label className="block text-gray-300 mb-2">
+                  {t.search.returnDate}
+                </label>
 
                 <Popover>
                   <PopoverTrigger asChild>
                     <button className="w-full p-3 pl-10 rounded-lg bg-black/40 border border-white/20 flex items-center text-left">
                       <CalendarIcon className="mr-2 text-gray-400" />
-                      {returnDate ? format(returnDate, "dd/MM/yyyy") : t.search.returnDate}
+                      {returnDate
+                        ? format(returnDate, "dd/MM/yyyy")
+                        : t.search.returnDate}
                     </button>
                   </PopoverTrigger>
 
@@ -221,7 +267,9 @@ export default function CheckoutPage() {
                       mode="single"
                       selected={returnDate}
                       onSelect={setReturnDate}
-                      disabled={(date) => date < pickupDate}
+                      disabled={(date) =>
+                        pickupDate ? date < pickupDate : date < new Date()
+                      }
                     />
                   </PopoverContent>
                 </Popover>
@@ -230,8 +278,16 @@ export default function CheckoutPage() {
 
             {/* TOTAL */}
             <div className="mt-10 text-xl">
-              <p>{t.checkout.totalDuration}: <span className="text-primary">{totalDays} {t.checkout.days}</span></p>
-              <p className="mt-2">{t.checkout.totalPrice}: <span className="text-primary font-bold">€{totalPrice}</span></p>
+              <p>
+                {t.checkout.totalDuration}:{" "}
+                <span className="text-primary">
+                  {totalDays} {t.checkout.days}
+                </span>
+              </p>
+              <p className="mt-2">
+                {t.checkout.totalPrice}:{" "}
+                <span className="text-primary font-bold">€{totalPrice}</span>
+              </p>
             </div>
 
             {/* ACTION BUTTONS */}
@@ -245,8 +301,11 @@ export default function CheckoutPage() {
               </Button>
 
               <a
-                href={`https://wa.me/212600000000?text=I want to book the ${car.nom}. Total: €${totalPrice}`}
+                href={`https://wa.me/212600000000?text=I want to book the ${
+                  car.nom
+                }. Total: €${totalPrice}`}
                 target="_blank"
+                rel="noreferrer"
                 className="px-8 py-3 rounded-lg bg-green-600 hover:bg-green-700 text-white text-lg font-semibold"
               >
                 {t.carsPage.whatsapp}
