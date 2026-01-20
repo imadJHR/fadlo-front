@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import Script from "next/script"; // Import Script for JSON-LD
 import { motion } from "framer-motion";
 import {
   Calendar as CalendarIcon,
@@ -39,6 +40,39 @@ export default function HomePage() {
 
   const [pickupDate, setPickupDate] = useState();
   const [returnDate, setReturnDate] = useState();
+
+  // JSON-LD Structured Data for Local Business / AutoRental
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "AutoRental",
+    "name": "Fadlo Car",
+    "image": "https://fadlocar.com/hero.png", // Replace with your actual domain
+    "description": "Agence de location de voitures de luxe et économiques à Casablanca.",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Votre Adresse Exacte Ici", // Update this
+      "addressLocality": "Casablanca",
+      "addressCountry": "MA"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 33.5170286119286,
+      "longitude": -7.654152168275857
+    },
+    "url": "https://fadlocar.com",
+    "telephone": "+212600000000", // Update this
+    "priceRange": "$$",
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": [
+          "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
+        ],
+        "opens": "09:00",
+        "closes": "22:00"
+      }
+    ]
+  };
 
   /* ----------------------------------------------------
         FETCH VEHICLES
@@ -77,21 +111,11 @@ export default function HomePage() {
       .catch((err) => console.error("Erreur API marques :", err));
   }, []);
 
-  /* ----------------------------------------------------
-        FORMAT IMAGE URLs
-        ✅ Supports Cloudinary full URLs + old local paths
-  ---------------------------------------------------- */
   const getImageUrl = (img) => {
     if (!img) return "/placeholder-car.jpg";
     if (typeof img !== "string") return "/placeholder-car.jpg";
-
-    // Cloudinary (or any absolute URL)
     if (img.startsWith("http://") || img.startsWith("https://")) return img;
-
-    // protocol-relative URL
     if (img.startsWith("//")) return `https:${img}`;
-
-    // old mode: local path served by your backend (if you still have some old records)
     return `https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/${img.replace(
       /^\/+/,
       ""
@@ -101,9 +125,16 @@ export default function HomePage() {
   return (
     <main className="min-h-screen">
       <Navbar />
+      
+      {/* SEO: Structured Data Script */}
+      <Script
+        id="json-ld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
 
       {/* HERO SECTION */}
-      <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+      <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden" aria-label="Hero">
         <div className="container mx-auto px-4 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <motion.div
@@ -111,6 +142,7 @@ export default function HomePage() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
             >
+              {/* SEO: h1 is crucial. Ensure translated text contains keywords like 'Location voiture' */}
               <h1 className="text-5xl lg:text-7xl font-bold text-white leading-tight mb-6">
                 {t.hero.title}{" "}
                 <span className="text-primary">{t.hero.titleSpan}</span>{" "}
@@ -129,7 +161,7 @@ export default function HomePage() {
                   {t.nav.bookNow}
                 </Button>
 
-                <Link href="/cars">
+                <Link href="/cars" aria-label="Voir notre flotte de véhicules">
                   <Button
                     size="lg"
                     variant="outline"
@@ -147,12 +179,13 @@ export default function HomePage() {
               transition={{ duration: 0.8, delay: 0.2 }}
             >
               <div className="relative h-[300px] lg:h-[400px] w-full">
+                {/* SEO: Descriptive Alt Text */}
                 <Image
                   src="/hero.png"
-                  alt="Luxury Car"
+                  alt="Location voiture de luxe Casablanca - Fadlo Car"
                   fill
                   className="object-contain drop-shadow-[0_20px_60px_rgba(255,0,0,0.35)]"
-                  priority
+                  priority={true} // High priority for LCP (Core Web Vitals)
                 />
               </div>
             </motion.div>
@@ -164,7 +197,7 @@ export default function HomePage() {
       </section>
 
       {/* SEARCH SECTION */}
-      <section className="relative z-20 -mt-10 mb-20 px-4">
+      <section className="relative z-20 -mt-10 mb-20 px-4" aria-label="Recherche de disponibilité">
         <div className="container mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
@@ -198,7 +231,7 @@ export default function HomePage() {
                   />
 
                   <div className="flex items-end">
-                    <Button className="w-full bg-primary hover:bg-primary/90 text-white h-10">
+                    <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-white h-10">
                       <Search className="h-4 w-4 mr-2" />
                       {t.search.findCar}
                     </Button>
@@ -211,10 +244,10 @@ export default function HomePage() {
       </section>
 
       {/* FEATURED */}
-      <section className="py-20 bg-black/50">
+      <section className="py-20 bg-black/50" aria-labelledby="featured-title">
         <div className="container mx-auto px-4">
           <div className="mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">
+            <h2 id="featured-title" className="text-3xl lg:text-4xl font-bold text-white mb-4">
               {t.featured.title}{" "}
               <span className="text-primary">{t.featured.titleSpan}</span>
             </h2>
@@ -242,9 +275,9 @@ export default function HomePage() {
       </section>
 
       {/* ALL VEHICLES */}
-      <section className="py-20 bg-black/70">
+      <section className="py-20 bg-black/70" aria-labelledby="all-vehicles-title">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">
+          <h2 id="all-vehicles-title" className="text-3xl lg:text-4xl font-bold text-white mb-4">
             Tous Nos <span className="text-primary">Véhicules</span>
           </h2>
 
@@ -281,7 +314,7 @@ export default function HomePage() {
       </section>
 
       {/* FEATURES */}
-      <section className="py-20">
+      <section className="py-20" aria-label="Nos Avantages">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <FeatureCard
@@ -304,9 +337,10 @@ export default function HomePage() {
       </section>
 
       {/* BRANDS */}
-      <section className="py-20 bg-black/60 overflow-hidden">
+      <section className="py-20 bg-black/60 overflow-hidden" aria-labelledby="brands-title">
         <div className="container mx-auto px-4 text-center">
           <motion.h2
+            id="brands-title"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             className="text-3xl md:text-4xl font-bold text-white mb-4"
@@ -339,9 +373,10 @@ export default function HomePage() {
                   }
                 >
                   <div className="w-28 h-28 bg-white rounded-xl shadow-md flex items-center justify-center hover:bg-primary/20 transition-all">
+                    {/* SEO: Add alt text to brand logos */}
                     <img
                       src={getImageUrl(brand.image)}
-                      alt={brand.title}
+                      alt={`Location voiture ${brand.title}`} 
                       className="w-20 h-20 object-contain opacity-90 hover:opacity-100 transition-all duration-300"
                     />
                   </div>
@@ -356,10 +391,11 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* SEO */}
-      <section className="py-24 relative overflow-hidden">
+      {/* SEO SECTION */}
+      <section className="py-24 relative overflow-hidden" aria-labelledby="seo-title">
         <div className="container mx-auto px-4 relative z-10 text-center">
           <motion.h2
+            id="seo-title"
             initial={{ y: 20, opacity: 0 }}
             whileInView={{ y: 0, opacity: 1 }}
             className="text-4xl font-bold text-white mb-6"
@@ -367,25 +403,28 @@ export default function HomePage() {
             {t.seo.title}
           </motion.h2>
 
-          <motion.p
+          <motion.div
             initial={{ y: 20, opacity: 0 }}
             whileInView={{ y: 0, opacity: 1 }}
-            className="text-gray-400 max-w-3xl mx-auto mb-10"
+            className="text-gray-400 max-w-3xl mx-auto mb-10 space-y-4"
           >
-            {t.seo.description}
-          </motion.p>
+            {/* Using div instead of p for seo description if it contains multiple paragraphs */}
+            <p>{t.seo.description}</p>
+          </motion.div>
         </div>
       </section>
 
       {/* MAP */}
-      <section className="py-20 bg-black/40">
+      <section className="py-20 bg-black/40" aria-labelledby="location-title">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-white text-center mb-8">
+          <h2 id="location-title" className="text-3xl font-bold text-white text-center mb-8">
             {t.location.title}
           </h2>
 
           <div className="w-full h-[400px] rounded-2xl overflow-hidden border border-white/10 shadow-xl">
+            {/* SEO: Add title to iframe for accessibility */}
             <iframe
+              title="Carte de localisation Fadlo Car Casablanca"
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3590.395180567483!2d-7.654152168275857!3d33.5170286119286!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xda62d80fea38c33%3A0x854b1ff0ac87d9aa!2sFaDlo%20Car!5e0!3m2!1sfr!2sma!4v1764389920204!5m2!1sfr!2sma"
               className="w-full h-full"
               loading="lazy"
@@ -454,6 +493,7 @@ function FeatureCard({ icon, title, desc }) {
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
+      viewport={{ once: true }} // SEO Performance: Only animate once to save resources
       className="bg-white/5 p-8 rounded-2xl border border-white/10 hover:border-primary/50 text-center transition"
     >
       <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-6">
