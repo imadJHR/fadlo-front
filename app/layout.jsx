@@ -1,7 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google"
 import "./globals.css"
 import { LanguageProvider } from "../app/components/language-provider"
-import Script from 'next/script' // Importez Script
+import Script from "next/script"
 
 const geistSans = Geist({
   variable: "--font-sans",
@@ -14,22 +14,29 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata = {
-  title: "FADLO CAR - Premium Car Rental Morocco",
-  description: "Luxury and economy car rental in Morocco. Best prices, premium service.",
+  metadataBase: new URL("https://fadlocar.com"),
+  title: {
+    default: "Fadlo Car - Location de Voiture au Maroc",
+    template: "%s | Fadlo Car",
+  },
+  description:
+    "Agence de location de voitures a Casablanca et au Maroc. Vehicules economiques, SUV et premium avec livraison aeroport et assistance 24/7.",
   icons: {
     icon: "/logo.png",
+    apple: "/logo.png",
   },
   other: {
-    'google-site-verification': 'sYwNmRYBy3-zmbbNTYzvkjIHgD3mNUh_sZzSnNKPPkA',
+    "google-site-verification": "sYwNmRYBy3-zmbbNTYzvkjIHgD3mNUh_sZzSnNKPPkA",
   },
 }
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="fr-MA" className="dark">
       <head>
         {/* Google Site Verification Meta Tag */}
         <meta name="google-site-verification" content="sYwNmRYBy3-zmbbNTYzvkjIHgD3mNUh_sZzSnNKPPkA" />
+        <meta name="theme-color" content="#0a0a0a" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} min-h-screen font-sans antialiased bg-background selection:bg-primary selection:text-white`}

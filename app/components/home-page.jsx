@@ -50,6 +50,29 @@ import { cn } from "@/lib/utils";
 
 import { useRouter } from "next/navigation";
 
+const API_BASE =
+  "https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws";
+
+const particles = Array.from({ length: 24 }, (_, i) => {
+  const x = (i * 37) % 100;
+  const y = (i * 53) % 100;
+  const size = 1 + (i % 3);
+
+  return {
+    x,
+    y,
+    size,
+    delay: (i % 8) * 0.45,
+    duration: 4 + (i % 5) * 0.4,
+    color:
+      i % 3 === 0
+        ? "rgba(220, 38, 38, 0.42)"
+        : i % 3 === 1
+          ? "rgba(255, 255, 255, 0.18)"
+          : "rgba(239, 68, 68, 0.28)",
+  };
+});
+
 /* ──────────────────────────── Animated Counter ──────────────────────────── */
 function AnimatedCounter({ target, suffix = "", duration = 2 }) {
   const [count, setCount] = useState(0);
@@ -84,31 +107,26 @@ function AnimatedCounter({ target, suffix = "", duration = 2 }) {
 function FloatingParticles() {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {Array.from({ length: 30 }).map((_, i) => (
+      {particles.map((particle, i) => (
         <motion.div
           key={i}
           className="absolute rounded-full"
           style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-            width: `${1 + Math.random() * 3}px`,
-            height: `${1 + Math.random() * 3}px`,
-            background:
-              i % 3 === 0
-                ? "rgba(220, 38, 38, 0.4)"
-                : i % 3 === 1
-                  ? "rgba(255, 255, 255, 0.2)"
-                  : "rgba(239, 68, 68, 0.3)",
+            left: `${particle.x}%`,
+            top: `${particle.y}%`,
+            width: `${particle.size}px`,
+            height: `${particle.size}px`,
+            background: particle.color,
           }}
           animate={{
-            y: [0, -40, 0],
-            opacity: [0, 1, 0],
-            scale: [0, 1.5, 0],
+            y: [0, -34, 0],
+            opacity: [0, 0.9, 0],
+            scale: [0.7, 1.4, 0.7],
           }}
           transition={{
-            duration: 3 + Math.random() * 4,
+            duration: particle.duration,
             repeat: Infinity,
-            delay: Math.random() * 5,
+            delay: particle.delay,
             ease: "easeInOut",
           }}
         />
@@ -118,10 +136,10 @@ function FloatingParticles() {
 }
 
 /* ──────────────────────────── Calendar Select ──────────────────────────── */
-function CalendarSelect({ label, value, onChange, placeholder }) {
+function CalendarSelect({ label, value, onChange, placeholder, minDate }) {
   return (
     <div className="space-y-2">
-      <Label className="text-white/80 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider">
+      <Label className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-white/70 sm:text-sm">
         <CalendarIcon className="h-4 w-4 text-red-500" />
         {label}
       </Label>
@@ -130,7 +148,7 @@ function CalendarSelect({ label, value, onChange, placeholder }) {
           <Button
             variant="outline"
             className={cn(
-              "bg-black/60 border-red-900/40 text-white w-full justify-start text-left font-normal h-14 rounded-xl hover:bg-black/80 hover:border-red-600/60 transition-all duration-300",
+              "h-14 w-full justify-start rounded-xl border-white/10 bg-white/[0.04] px-4 text-left font-semibold text-white shadow-inner shadow-white/[0.02] transition-all duration-300 hover:border-red-500/50 hover:bg-white/[0.07]",
               !value && "text-white/40"
             )}
           >
@@ -139,14 +157,14 @@ function CalendarSelect({ label, value, onChange, placeholder }) {
           </Button>
         </PopoverTrigger>
         <PopoverContent
-          className="w-auto p-0 bg-black border-red-900/40 rounded-2xl shadow-2xl shadow-red-900/20"
+          className="w-auto rounded-2xl border-red-900/40 bg-black p-0 text-white shadow-2xl shadow-red-900/20"
           align="start"
         >
           <Calendar
             mode="single"
             selected={value}
             onSelect={onChange}
-            disabled={(date) => date < new Date()}
+            disabled={(date) => (minDate ? date < minDate : false)}
             className="bg-black text-white rounded-2xl"
           />
         </PopoverContent>
@@ -168,21 +186,23 @@ function FAQItem({ question, answer, index }) {
     >
       <div
         className={cn(
-          "border rounded-2xl transition-all duration-500 overflow-hidden",
+          "overflow-hidden rounded-2xl border transition-all duration-500",
           isOpen
             ? "border-red-600/50 bg-red-950/20 shadow-lg shadow-red-900/10"
-            : "border-white/10 bg-black/40 hover:border-red-900/40"
+            : "border-white/10 bg-white/[0.03] hover:border-red-900/40"
         )}
       >
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="w-full flex items-center justify-between p-6 text-left"
+          className="flex w-full items-center justify-between gap-4 p-5 text-left sm:p-6"
           aria-expanded={isOpen}
         >
-          <h3 className="text-white font-bold text-lg pr-4">{question}</h3>
+          <h3 className="text-base font-bold leading-snug text-white sm:text-lg">
+            {question}
+          </h3>
           <div
             className={cn(
-              "w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-500",
+              "flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full transition-all duration-500",
               isOpen
                 ? "bg-red-600 text-white rotate-180"
                 : "bg-white/10 text-white/60"
@@ -230,15 +250,19 @@ export default function HomePage() {
   });
   const heroY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+  const minSelectableDate = new Date();
+  minSelectableDate.setHours(0, 0, 0, 0);
 
   /* ─── JSON-LD: AutoRental ─── */
   const jsonLdBusiness = {
     "@context": "https://schema.org",
     "@type": "AutoRental",
+    "@id": "https://fadlocar.com/#business",
     name: "Fadlo Car",
     image: "https://fadlocar.com/hero.png",
+    logo: "https://fadlocar.com/logo.png",
     description:
-      "Fadlo Car — Agence de location de voitures de luxe et économiques à Casablanca, Maroc. Large flotte, prix compétitifs, service 24h/24.",
+      "Fadlo Car est une agence de location de voitures a Casablanca proposant des vehicules economiques, SUV, berlines et voitures premium avec livraison a l'aeroport Mohammed V.",
     address: {
       "@type": "PostalAddress",
       streetAddress: "Boulevard Mohammed V",
@@ -253,8 +277,21 @@ export default function HomePage() {
       longitude: -7.654152168275857,
     },
     url: "https://fadlocar.com",
-    telephone: "+212600000000",
+    telephone: "+212661528619",
     priceRange: "$$",
+    currenciesAccepted: "MAD, EUR",
+    paymentAccepted: "Cash, Credit Card, Bank Transfer",
+    areaServed: [
+      {
+        "@type": "City",
+        name: "Casablanca",
+      },
+      {
+        "@type": "Country",
+        name: "Morocco",
+      },
+    ],
+    hasMap: "https://maps.app.goo.gl/TaXG8nCmjqmScqMR9",
     openingHoursSpecification: [
       {
         "@type": "OpeningHoursSpecification",
@@ -271,6 +308,13 @@ export default function HomePage() {
         closes: "22:00",
       },
     ],
+    contactPoint: {
+      "@type": "ContactPoint",
+      telephone: "+212661528619",
+      contactType: "customer service",
+      areaServed: "MA",
+      availableLanguage: ["fr", "en", "ar"],
+    },
     sameAs: [
       "https://www.facebook.com/fadlocar",
       "https://www.instagram.com/fadlocar",
@@ -353,13 +397,28 @@ export default function HomePage() {
   const jsonLdWebsite = {
     "@context": "https://schema.org",
     "@type": "WebSite",
+    "@id": "https://fadlocar.com/#website",
     name: "Fadlo Car",
     url: "https://fadlocar.com",
+    inLanguage: ["fr-MA", "en"],
     potentialAction: {
       "@type": "SearchAction",
       target: "https://fadlocar.com/cars?search={search_term_string}",
       "query-input": "required name=search_term_string",
     },
+  };
+
+  const jsonLdBreadcrumb = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Accueil",
+        item: "https://fadlocar.com",
+      },
+    ],
   };
 
   /* ─── Testimonials per language ─── */
@@ -561,9 +620,7 @@ export default function HomePage() {
 
   /* ─── Fetch Vehicles ─── */
   useEffect(() => {
-    const API =
-      "https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/api/vehicules";
-    fetch(API)
+    fetch(`${API_BASE}/api/vehicules`)
       .then((r) => r.json())
       .then((data) => {
         if (!data.success) return;
@@ -578,9 +635,7 @@ export default function HomePage() {
 
   /* ─── Fetch Brands ─── */
   useEffect(() => {
-    const API =
-      "https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/api/brands";
-    fetch(API)
+    fetch(`${API_BASE}/api/brands`)
       .then((r) => r.json())
       .then((data) => {
         if (data.success) setBrands(data.brands || []);
@@ -592,7 +647,14 @@ export default function HomePage() {
     if (!src || typeof src !== "string") return "/placeholder-car.jpg";
     if (src.startsWith("http://") || src.startsWith("https://")) return src;
     if (src.startsWith("//")) return `https:${src}`;
-    return `https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/${src.replace(/^\/+/, "")}`;
+    return `${API_BASE}/${src.replace(/^\/+/, "")}`;
+  };
+
+  const handlePickupDateChange = (date) => {
+    setPickupDate(date);
+    if (date && returnDate && returnDate < date) {
+      setReturnDate(undefined);
+    }
   };
 
   /* ════════════════════════════  RENDER  ════════════════════════════ */
@@ -616,18 +678,22 @@ export default function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdWebsite) }}
       />
+      <Script
+        id="ld-breadcrumb"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdBreadcrumb) }}
+      />
 
       {/* ═══════════════════════  HERO  ═══════════════════════ */}
       <section
         ref={heroRef}
-        className="relative min-h-screen flex items-center overflow-hidden"
+        className="relative flex min-h-[100svh] items-center overflow-hidden"
         aria-label="Accueil — Location de voitures Casablanca"
       >
         {/* Background layers */}
         <div className="absolute inset-0 bg-black" />
-        <div className="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] bg-red-600/20 rounded-full blur-[200px]" />
-        <div className="absolute bottom-[-20%] left-[-10%] w-[600px] h-[600px] bg-red-900/15 rounded-full blur-[150px]" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-red-600/5 rounded-full blur-[100px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(220,38,38,0.18),transparent_38%),linear-gradient(135deg,rgba(127,29,29,0.16),transparent_36%)]" />
+        <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black via-black/80 to-transparent" />
 
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute -top-1/2 -right-1/4 w-[200%] h-32 bg-gradient-to-r from-transparent via-red-600/5 to-transparent rotate-[-15deg]" />
@@ -647,16 +713,16 @@ export default function HomePage() {
 
         <motion.div
           style={{ y: heroY, opacity: heroOpacity }}
-          className="container mx-auto px-4 relative z-10 pt-24"
+          className="container relative z-10 mx-auto px-4 pb-20 pt-28 sm:pt-32 lg:pb-10"
         >
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[1.02fr_0.98fr] lg:gap-16">
             {/* Left column */}
-            <div className="space-y-8">
+            <div className="mx-auto max-w-2xl space-y-7 text-center lg:mx-0 lg:text-left">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="inline-flex items-center gap-2 bg-red-600/10 border border-red-600/30 rounded-full px-6 py-2.5"
+                className="inline-flex items-center gap-2 rounded-full border border-red-600/30 bg-red-600/10 px-4 py-2.5 sm:px-6"
               >
                 <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
                 <span className="text-red-400 text-sm font-bold tracking-wider uppercase">
@@ -668,7 +734,7 @@ export default function HomePage() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.1 }}
-                className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-black text-white leading-[0.9] tracking-tighter"
+                className="text-4xl font-black leading-[0.96] tracking-tight text-white sm:text-5xl md:text-6xl xl:text-7xl"
               >
                 {t.hero.title}{" "}
                 <span className="relative inline-block">
@@ -688,7 +754,7 @@ export default function HomePage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.3 }}
-                className="text-lg sm:text-xl text-white/50 max-w-lg leading-relaxed"
+                className="mx-auto max-w-xl text-base leading-relaxed text-white/62 sm:text-lg lg:mx-0"
               >
                 {t.hero.description}
               </motion.p>
@@ -697,12 +763,12 @@ export default function HomePage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.5 }}
-                className="flex flex-wrap gap-4"
+                className="flex flex-col gap-3 sm:flex-row sm:justify-center lg:justify-start"
               >
                 <Link href="/cars" aria-label={s.bookNowCta}>
                   <Button
                     size="lg"
-                    className="group bg-red-600 hover:bg-red-700 text-white rounded-full px-10 text-lg h-16 shadow-2xl shadow-red-600/30 transition-all duration-500 hover:shadow-red-600/50 hover:scale-105 border-0"
+                    className="group h-14 w-full rounded-full border-0 bg-red-600 px-8 text-base font-bold text-white shadow-2xl shadow-red-600/25 transition-all duration-500 hover:scale-[1.02] hover:bg-red-700 hover:shadow-red-600/45 sm:w-auto sm:h-16 sm:text-lg"
                   >
                     {t.nav.bookNow}
                     <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-2 transition-transform duration-300" />
@@ -713,7 +779,7 @@ export default function HomePage() {
                   <Button
                     size="lg"
                     variant="outline"
-                    className="text-white border-white/20 hover:bg-white/5 hover:border-white/40 rounded-full px-10 text-lg h-16 backdrop-blur-sm transition-all duration-500"
+                    className="h-14 w-full rounded-full border-white/20 px-8 text-base text-white backdrop-blur-sm transition-all duration-500 hover:border-white/40 hover:bg-white/5 sm:w-auto sm:h-16 sm:text-lg"
                   >
                     <Play className="mr-2 h-5 w-5" />
                     {t.hero.viewFleet}
@@ -726,7 +792,7 @@ export default function HomePage() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.7 }}
-                className="flex items-center gap-8 pt-6 border-t border-white/5"
+                className="flex flex-col items-center gap-5 border-t border-white/5 pt-6 sm:flex-row sm:justify-center sm:gap-8 lg:justify-start"
               >
                 <div className="flex items-center gap-3">
                   <div className="flex -space-x-2">
@@ -768,9 +834,9 @@ export default function HomePage() {
               initial={{ opacity: 0, x: 80 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 1, delay: 0.3 }}
-              className="relative"
+              className="relative mx-auto w-full max-w-2xl"
             >
-              <div className="relative h-[350px] sm:h-[400px] lg:h-[500px] w-full">
+              <div className="relative h-[270px] w-full sm:h-[380px] lg:h-[500px]">
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] h-[70%] bg-red-600/20 rounded-full blur-[100px]" />
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60%] h-[40%] bg-red-500/15 rounded-full blur-[60px]" />
 
@@ -841,7 +907,10 @@ export default function HomePage() {
       </section>
 
       {/* ═══════════════════════  SEARCH BAR  ═══════════════════════ */}
-      <section className="relative z-20 -mt-16 mb-24 px-4" aria-label="Search">
+      <section
+        className="relative z-20 -mt-10 mb-14 px-4 sm:-mt-16 sm:mb-20 lg:mb-24"
+        aria-label="Search"
+      >
         <div className="container mx-auto max-w-5xl">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
@@ -849,36 +918,39 @@ export default function HomePage() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <Card className="bg-black/80 backdrop-blur-2xl border border-red-900/30 shadow-2xl shadow-red-900/10 rounded-3xl overflow-hidden">
+            <Card className="overflow-hidden rounded-2xl border border-red-900/30 bg-black/82 shadow-2xl shadow-red-900/10 backdrop-blur-2xl">
               <div className="absolute inset-0 bg-gradient-to-r from-red-600/5 via-transparent to-red-600/5" />
               <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-red-600/50 to-transparent" />
-              <CardContent className="p-8 relative">
+              <CardContent className="relative p-5 sm:p-6 lg:p-8">
                 <form
                   onSubmit={(e) => {
                     e.preventDefault();
                     const p = new URLSearchParams();
                     if (pickupDate) p.set("pickup", pickupDate.toISOString());
                     if (returnDate) p.set("return", returnDate.toISOString());
-                    router.push(`/cars?${p.toString()}`);
+                    const query = p.toString();
+                    router.push(query ? `/cars?${query}` : "/cars");
                   }}
-                  className="grid grid-cols-1 md:grid-cols-3 gap-6 items-end"
+                  className="grid grid-cols-1 items-end gap-4 md:grid-cols-3 md:gap-5 lg:gap-6"
                 >
                   <CalendarSelect
                     label={t.search.pickupDate}
                     value={pickupDate}
-                    onChange={setPickupDate}
+                    onChange={handlePickupDateChange}
                     placeholder={s.selectDate}
+                    minDate={minSelectableDate}
                   />
                   <CalendarSelect
                     label={t.search.returnDate}
                     value={returnDate}
                     onChange={setReturnDate}
                     placeholder={s.selectDate}
+                    minDate={pickupDate || minSelectableDate}
                   />
 
                   <Button
                     type="submit"
-                    className="h-14 bg-red-600 hover:bg-red-700 text-white rounded-xl text-base font-bold shadow-lg shadow-red-600/30 transition-all hover:shadow-xl hover:shadow-red-600/40 border-0 uppercase tracking-wider"
+                    className="h-14 rounded-xl border-0 bg-red-600 text-base font-bold uppercase tracking-wider text-white shadow-lg shadow-red-600/30 transition-all hover:bg-red-700 hover:shadow-xl hover:shadow-red-600/40"
                   >
                     <Search className="h-5 w-5 mr-2" />
                     {t.search.findCar}
@@ -891,7 +963,7 @@ export default function HomePage() {
       </section>
 
       {/* ═══════════════════════  STATS  ═══════════════════════ */}
-      <section className="py-20" aria-label="Stats">
+      <section className="py-14 sm:py-16 lg:py-20" aria-label="Stats">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -931,7 +1003,7 @@ export default function HomePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="group relative bg-black/60 border border-white/5 rounded-2xl p-8 text-center hover:border-red-900/50 transition-all duration-500 overflow-hidden"
+                className="group relative overflow-hidden rounded-2xl border border-white/5 bg-white/[0.03] p-5 text-center transition-all duration-500 hover:border-red-900/50 sm:p-7 lg:p-8"
               >
                 <div className="absolute inset-0 bg-gradient-to-b from-red-600/0 to-red-600/0 group-hover:from-red-600/5 group-hover:to-red-600/10 transition-all duration-500" />
                 <div className="relative z-10">
@@ -956,14 +1028,17 @@ export default function HomePage() {
       </section>
 
       {/* ═══════════════════════  FEATURED CARS  ═══════════════════════ */}
-      <section className="py-24 relative" aria-labelledby="featured-title">
+      <section
+        className="relative py-16 sm:py-20 lg:py-24"
+        aria-labelledby="featured-title"
+      >
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-red-600/30 to-transparent" />
         <div className="container mx-auto px-4 relative">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14"
+            className="mb-10 flex flex-col gap-6 md:mb-14 md:flex-row md:items-end md:justify-between"
           >
             <div>
               <span className="inline-flex items-center gap-2 text-red-500 text-sm font-bold tracking-[0.2em] uppercase mb-4">
@@ -972,12 +1047,12 @@ export default function HomePage() {
               </span>
               <h2
                 id="featured-title"
-                className="text-4xl lg:text-6xl font-black text-white leading-tight tracking-tight"
+                className="text-3xl font-black leading-tight tracking-tight text-white sm:text-4xl lg:text-6xl"
               >
                 {t.featured.title}{" "}
                 <span className="text-red-600">{t.featured.titleSpan}</span>
               </h2>
-              <p className="text-white/40 mt-4 max-w-xl text-lg">
+              <p className="mt-4 max-w-xl text-base leading-relaxed text-white/45 sm:text-lg">
                 {t.featured.description}
               </p>
             </div>
@@ -993,7 +1068,7 @@ export default function HomePage() {
             </Link>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
             {featuredCars.map((car, index) => (
               <CarCard
                 key={car._id}
@@ -1015,7 +1090,7 @@ export default function HomePage() {
 
       {/* ═══════════════════════  HOW IT WORKS  ═══════════════════════ */}
       <section
-        className="py-24 relative overflow-hidden"
+        className="relative overflow-hidden py-16 sm:py-20 lg:py-24"
         aria-labelledby="how-it-works-title"
       >
         <div className="absolute inset-0 bg-gradient-to-b from-black via-red-950/5 to-black" />
@@ -1024,7 +1099,7 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-20"
+            className="mb-12 text-center sm:mb-16 lg:mb-20"
           >
             <span className="inline-flex items-center gap-2 text-red-500 text-sm font-bold tracking-[0.2em] uppercase mb-4">
               <Zap className="h-4 w-4" />
@@ -1032,17 +1107,17 @@ export default function HomePage() {
             </span>
             <h2
               id="how-it-works-title"
-              className="text-4xl lg:text-6xl font-black text-white mb-4 tracking-tight"
+              className="mb-4 text-3xl font-black tracking-tight text-white sm:text-4xl lg:text-6xl"
             >
               {s.howItWorksTitle}{" "}
               <span className="text-red-600">{s.howItWorksSpan}</span>
             </h2>
-            <p className="text-white/40 max-w-2xl mx-auto text-lg">
+            <p className="mx-auto max-w-2xl text-base leading-relaxed text-white/45 sm:text-lg">
               {s.howItWorksDesc}
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+          <div className="relative grid grid-cols-1 gap-6 md:grid-cols-3 lg:gap-8">
             <div className="hidden md:block absolute top-28 left-[16.66%] right-[16.66%] h-px bg-gradient-to-r from-red-600/60 via-red-500 to-red-600/60" />
 
             {[
@@ -1073,7 +1148,7 @@ export default function HomePage() {
                 transition={{ delay: i * 0.2 }}
                 className="relative group"
               >
-                <div className="bg-black/60 border border-white/5 rounded-3xl p-10 text-center hover:border-red-900/50 transition-all duration-500 h-full overflow-hidden relative">
+                <div className="relative h-full overflow-hidden rounded-2xl border border-white/5 bg-white/[0.03] p-7 text-center transition-all duration-500 hover:border-red-900/50 sm:p-8 lg:p-10">
                   <div className="absolute inset-0 bg-gradient-to-b from-red-600/0 to-red-600/0 group-hover:from-red-600/5 group-hover:to-red-600/10 transition-all duration-500" />
                   <div className="relative z-10">
                     <div className="relative mx-auto mb-8">
@@ -1101,14 +1176,17 @@ export default function HomePage() {
       </section>
 
       {/* ═══════════════════════  ALL VEHICLES  ═══════════════════════ */}
-      <section className="py-24 relative" aria-labelledby="all-vehicles-title">
+      <section
+        className="relative py-16 sm:py-20 lg:py-24"
+        aria-labelledby="all-vehicles-title"
+      >
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-red-600/30 to-transparent" />
         <div className="container mx-auto px-4 relative">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="mb-14"
+            className="mb-10 sm:mb-14"
           >
             <span className="inline-flex items-center gap-2 text-red-500 text-sm font-bold tracking-[0.2em] uppercase mb-4">
               <Car className="h-4 w-4" />
@@ -1116,17 +1194,17 @@ export default function HomePage() {
             </span>
             <h2
               id="all-vehicles-title"
-              className="text-4xl lg:text-6xl font-black text-white mb-4 tracking-tight"
+              className="mb-4 text-3xl font-black tracking-tight text-white sm:text-4xl lg:text-6xl"
             >
               {s.allVehiclesTitle}{" "}
               <span className="text-red-600">{s.allVehiclesSpan}</span>
             </h2>
-            <p className="text-white/40 text-lg max-w-xl">
+            <p className="max-w-xl text-base leading-relaxed text-white/45 sm:text-lg">
               {s.allVehiclesDesc}
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
             {allCars.map((car, index) => (
               <CarCard
                 key={car._id}
@@ -1148,10 +1226,10 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="flex justify-center mt-14"
+            className="mt-10 flex justify-center sm:mt-14"
           >
             <Link href="/cars">
-              <Button className="bg-red-600 hover:bg-red-700 text-white px-14 py-7 rounded-full text-lg font-bold shadow-2xl shadow-red-600/30 hover:shadow-red-600/50 transition-all group border-0 uppercase tracking-wider">
+              <Button className="group rounded-full border-0 bg-red-600 px-8 py-6 text-base font-bold uppercase tracking-wider text-white shadow-2xl shadow-red-600/30 transition-all hover:bg-red-700 hover:shadow-red-600/50 sm:px-14 sm:py-7 sm:text-lg">
                 {s.viewMoreVehicles}
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-2 transition-transform duration-300" />
               </Button>
@@ -1162,7 +1240,7 @@ export default function HomePage() {
 
       {/* ═══════════════════════  FEATURES  ═══════════════════════ */}
       <section
-        className="py-24 relative overflow-hidden"
+        className="relative overflow-hidden py-16 sm:py-20 lg:py-24"
         aria-label={s.ourAdvantages}
       >
         <div className="absolute top-1/2 left-0 w-[400px] h-[400px] bg-red-600/5 rounded-full blur-[150px] -translate-y-1/2" />
@@ -1173,22 +1251,22 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-20"
+            className="mb-12 text-center sm:mb-16 lg:mb-20"
           >
             <span className="inline-flex items-center gap-2 text-red-500 text-sm font-bold tracking-[0.2em] uppercase mb-4">
               <Award className="h-4 w-4" />
               {s.ourAdvantages}
             </span>
-            <h2 className="text-4xl lg:text-6xl font-black text-white mb-4 tracking-tight">
+            <h2 className="mb-4 text-3xl font-black tracking-tight text-white sm:text-4xl lg:text-6xl">
               {s.whyChoose}{" "}
               <span className="text-red-600">{s.fadloCarQuestion}</span>
             </h2>
-            <p className="text-white/40 max-w-2xl mx-auto text-lg">
+            <p className="mx-auto max-w-2xl text-base leading-relaxed text-white/45 sm:text-lg">
               {s.advantagesDesc}
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
             {[
               {
                 icon: <Trophy className="h-7 w-7" />,
@@ -1227,7 +1305,7 @@ export default function HomePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="group bg-black/60 border border-white/5 rounded-3xl p-8 hover:border-red-900/50 transition-all duration-500 overflow-hidden relative"
+                className="group relative overflow-hidden rounded-2xl border border-white/5 bg-white/[0.03] p-6 transition-all duration-500 hover:border-red-900/50 sm:p-8"
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-red-600/0 to-red-600/0 group-hover:from-red-600/5 group-hover:to-red-900/10 transition-all duration-500" />
                 <div className="relative z-10">
@@ -1249,7 +1327,7 @@ export default function HomePage() {
 
       {/* ═══════════════════════  TESTIMONIALS  ═══════════════════════ */}
       <section
-        className="py-24 relative overflow-hidden"
+        className="relative overflow-hidden py-16 sm:py-20 lg:py-24"
         aria-labelledby="testimonials-title"
       >
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-red-600/30 to-transparent" />
@@ -1260,7 +1338,7 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            className="mb-10 text-center sm:mb-16"
           >
             <span className="inline-flex items-center gap-2 text-red-500 text-sm font-bold tracking-[0.2em] uppercase mb-4">
               <Quote className="h-4 w-4" />
@@ -1268,7 +1346,7 @@ export default function HomePage() {
             </span>
             <h2
               id="testimonials-title"
-              className="text-4xl lg:text-6xl font-black text-white mb-4 tracking-tight"
+              className="mb-4 text-3xl font-black tracking-tight text-white sm:text-4xl lg:text-6xl"
             >
               {s.whatClientsSay}{" "}
               <span className="text-red-600">{s.clientsSpan}</span>
@@ -1288,7 +1366,7 @@ export default function HomePage() {
                   transition={{ duration: 0.5 }}
                   className={activeTestimonial === i ? "block" : "hidden"}
                 >
-                  <div className="bg-black/60 border border-red-900/30 rounded-3xl p-10 md:p-14 text-center relative overflow-hidden">
+                  <div className="relative overflow-hidden rounded-2xl border border-red-900/30 bg-white/[0.03] p-6 text-center sm:p-10 md:p-14">
                     <div className="absolute top-6 left-8 text-red-600/10 text-[120px] font-serif leading-none select-none pointer-events-none">
                       &ldquo;
                     </div>
@@ -1303,7 +1381,7 @@ export default function HomePage() {
                           )
                         )}
                       </div>
-                      <p className="text-white text-xl md:text-2xl font-medium leading-relaxed mb-10 italic">
+                      <p className="mb-8 text-lg font-medium leading-relaxed text-white sm:text-xl md:mb-10 md:text-2xl">
                         &ldquo;{testimonial.text}&rdquo;
                       </p>
                       <div className="flex items-center justify-center gap-4">
@@ -1346,7 +1424,7 @@ export default function HomePage() {
 
       {/* ═══════════════════════  BRANDS  ═══════════════════════ */}
       <section
-        className="py-24 overflow-hidden"
+        className="overflow-hidden py-16 sm:py-20 lg:py-24"
         aria-labelledby="brands-title"
       >
         <div className="container mx-auto px-4 text-center">
@@ -1354,7 +1432,7 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="mb-14"
+            className="mb-10 sm:mb-14"
           >
             <span className="inline-flex items-center gap-2 text-red-500 text-sm font-bold tracking-[0.2em] uppercase mb-4">
               <Award className="h-4 w-4" />
@@ -1362,11 +1440,11 @@ export default function HomePage() {
             </span>
             <h2
               id="brands-title"
-              className="text-4xl lg:text-6xl font-black text-white mb-4 tracking-tight"
+              className="mb-4 text-3xl font-black tracking-tight text-white sm:text-4xl lg:text-6xl"
             >
               {t.brands.title}
             </h2>
-            <p className="text-white/40 max-w-2xl mx-auto text-lg">
+            <p className="mx-auto max-w-2xl text-base leading-relaxed text-white/45 sm:text-lg">
               {t.brands.description}
             </p>
           </motion.div>
@@ -1396,7 +1474,7 @@ export default function HomePage() {
                       )
                     }
                   >
-                    <div className="w-28 h-28 bg-black/60 border border-white/5 rounded-2xl flex items-center justify-center group-hover:border-red-600/50 group-hover:bg-red-600/5 transition-all duration-500 group-hover:scale-110">
+                    <div className="flex h-24 w-24 items-center justify-center rounded-2xl border border-white/5 bg-white/[0.03] transition-all duration-500 group-hover:scale-105 group-hover:border-red-600/50 group-hover:bg-red-600/5 sm:h-28 sm:w-28">
                       <img
                         src={getImageUrl(brand.image)}
                         alt={`${brand.title} — Fadlo Car`}
@@ -1416,14 +1494,17 @@ export default function HomePage() {
       </section>
 
       {/* ═══════════════════════  FAQ  ═══════════════════════ */}
-      <section className="py-24 relative" aria-labelledby="faq-title">
+      <section
+        className="relative py-16 sm:py-20 lg:py-24"
+        aria-labelledby="faq-title"
+      >
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-red-600/30 to-transparent" />
         <div className="container mx-auto px-4 max-w-4xl relative">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            className="mb-10 text-center sm:mb-16"
           >
             <span className="inline-flex items-center gap-2 text-red-500 text-sm font-bold tracking-[0.2em] uppercase mb-4">
               <Headphones className="h-4 w-4" />
@@ -1431,7 +1512,7 @@ export default function HomePage() {
             </span>
             <h2
               id="faq-title"
-              className="text-4xl lg:text-6xl font-black text-white mb-4 tracking-tight"
+              className="mb-4 text-3xl font-black tracking-tight text-white sm:text-4xl lg:text-6xl"
             >
               {s.questionsTitle}{" "}
               <span className="text-red-600">{s.questionsSpan}</span>
@@ -1453,7 +1534,7 @@ export default function HomePage() {
 
       {/* ═══════════════════════  SEO TEXT  ═══════════════════════ */}
       <section
-        className="py-24 relative overflow-hidden"
+        className="relative overflow-hidden py-16 sm:py-20 lg:py-24"
         aria-labelledby="seo-title"
       >
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-red-950/5 to-transparent" />
@@ -1465,12 +1546,12 @@ export default function HomePage() {
           >
             <h2
               id="seo-title"
-              className="text-4xl lg:text-5xl font-black text-white mb-8 tracking-tight"
+              className="mb-6 text-3xl font-black tracking-tight text-white sm:text-4xl lg:text-5xl"
             >
               {t.seo.title}
             </h2>
 
-            <div className="text-white/40 text-lg leading-relaxed space-y-4">
+            <div className="space-y-4 text-base leading-relaxed text-white/50 sm:text-lg">
               <p>{t.seo.description}</p>
               <p>{s.seoExtraP}</p>
             </div>
@@ -1479,18 +1560,17 @@ export default function HomePage() {
       </section>
 
       {/* ═══════════════════════  CTA  ═══════════════════════ */}
-      <section className="py-24" aria-label="CTA">
+      <section className="py-16 sm:py-20 lg:py-24" aria-label="CTA">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="relative rounded-[2rem] overflow-hidden"
+            className="relative overflow-hidden rounded-2xl sm:rounded-[1.75rem]"
           >
             <div className="absolute inset-0 bg-red-600" />
             <div className="absolute inset-0 bg-gradient-to-br from-red-700 via-red-600 to-red-800" />
-            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-white/5 rounded-full blur-[100px]" />
-            <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-black/20 rounded-full blur-[100px]" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(255,255,255,0.12),transparent_38%)]" />
             <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
 
             <div
@@ -1502,35 +1582,35 @@ export default function HomePage() {
               }}
             />
 
-            <div className="relative px-8 py-20 md:px-16 md:py-28 text-center">
+            <div className="relative px-5 py-14 text-center sm:px-8 sm:py-20 md:px-16 md:py-24">
               <motion.h2
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="text-4xl md:text-5xl lg:text-7xl font-black text-white mb-6 leading-tight tracking-tight"
+                className="mb-5 text-3xl font-black leading-tight tracking-tight text-white sm:text-4xl md:text-5xl lg:text-6xl"
               >
                 {s.ctaTitle}
                 <br />
                 {s.ctaTitleLine2}
               </motion.h2>
-              <p className="text-white/80 text-lg md:text-xl max-w-2xl mx-auto mb-12">
+              <p className="mx-auto mb-9 max-w-2xl text-base leading-relaxed text-white/80 sm:text-lg md:mb-12 md:text-xl">
                 {s.ctaDesc}
               </p>
-              <div className="flex flex-wrap justify-center gap-4">
+              <div className="flex flex-col justify-center gap-3 sm:flex-row sm:flex-wrap sm:gap-4">
                 <Link href="/cars">
                   <Button
                     size="lg"
-                    className="bg-white text-red-600 hover:bg-white/90 rounded-full px-12 h-16 text-lg font-black shadow-2xl shadow-black/30 hover:scale-105 transition-all duration-500 group border-0 uppercase tracking-wider"
+                    className="group h-14 w-full rounded-full border-0 bg-white px-8 text-base font-black uppercase tracking-wider text-red-600 shadow-2xl shadow-black/30 transition-all duration-500 hover:scale-[1.02] hover:bg-white/90 sm:w-auto sm:h-16 sm:px-12 sm:text-lg"
                   >
                     {s.bookNowCta}
                     <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-2 transition-transform duration-300" />
                   </Button>
                 </Link>
-                <a href="tel:+212600000000">
+                <a href="tel:+212661528619">
                   <Button
                     size="lg"
                     variant="outline"
-                    className="border-white/30 text-white hover:bg-white/10 hover:border-white/50 rounded-full px-12 h-16 text-lg transition-all duration-500"
+                    className="h-14 w-full rounded-full border-white/30 px-8 text-base text-white transition-all duration-500 hover:border-white/50 hover:bg-white/10 sm:w-auto sm:h-16 sm:px-12 sm:text-lg"
                   >
                     <Phone className="mr-2 h-5 w-5" />
                     {s.callUs}
@@ -1543,14 +1623,17 @@ export default function HomePage() {
       </section>
 
       {/* ═══════════════════════  MAP  ═══════════════════════ */}
-      <section className="py-24 relative" aria-labelledby="location-title">
+      <section
+        className="relative py-16 sm:py-20 lg:py-24"
+        aria-labelledby="location-title"
+      >
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-red-600/30 to-transparent" />
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-14"
+            className="mb-10 text-center sm:mb-14"
           >
             <span className="inline-flex items-center gap-2 text-red-500 text-sm font-bold tracking-[0.2em] uppercase mb-4">
               <MapPin className="h-4 w-4" />
@@ -1558,18 +1641,20 @@ export default function HomePage() {
             </span>
             <h2
               id="location-title"
-              className="text-4xl lg:text-6xl font-black text-white mb-4 tracking-tight"
+              className="mb-4 text-3xl font-black tracking-tight text-white sm:text-4xl lg:text-6xl"
             >
               {t.location.title}
             </h2>
-            <p className="text-white/40 text-lg">{s.locationDesc}</p>
+            <p className="mx-auto max-w-2xl text-base leading-relaxed text-white/45 sm:text-lg">
+              {s.locationDesc}
+            </p>
           </motion.div>
 
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="w-full h-[450px] rounded-3xl overflow-hidden border border-red-900/30 shadow-2xl shadow-red-900/10"
+            className="h-[320px] w-full overflow-hidden rounded-2xl border border-red-900/30 shadow-2xl shadow-red-900/10 sm:h-[450px]"
           >
             <iframe
               title="Fadlo Car — Casablanca"
