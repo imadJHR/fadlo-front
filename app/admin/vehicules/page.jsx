@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -12,6 +12,94 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import axios from "axios";
+
+function ToggleCard({
+  checked,
+  onCheckedChange,
+  label,
+  description,
+  activeText,
+  inactiveText,
+  tone = "red",
+}) {
+  const accentClass =
+    tone === "blue"
+      ? "from-sky-500/20 via-sky-400/10 to-transparent"
+      : "from-[#ff5a36]/20 via-[#ff2d2d]/10 to-transparent";
+
+  const pillClass = checked
+    ? tone === "blue"
+      ? "bg-sky-500/15 text-sky-200 ring-1 ring-sky-400/30"
+      : "bg-[#ff5a36]/15 text-[#ffd2c7] ring-1 ring-[#ff5a36]/30"
+    : "bg-white/8 text-white/65 ring-1 ring-white/10";
+
+  return (
+    <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] sm:col-span-2">
+      <div className={`absolute inset-0 bg-gradient-to-br ${accentClass}`} />
+      <div className="relative flex flex-col items-start gap-4 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
+        <div className="min-w-0 space-y-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <Label className="text-sm font-semibold text-white sm:text-base">
+              {label}
+            </Label>
+            <span
+              className={`rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] ${pillClass}`}
+            >
+              {checked ? activeText : inactiveText}
+            </span>
+          </div>
+          <p className="max-w-xl text-xs leading-5 text-white/60 sm:text-sm">
+            {description}
+          </p>
+        </div>
+
+        <Switch
+          checked={checked}
+          onCheckedChange={onCheckedChange}
+          className="h-7 w-12 border border-white/15 bg-white/10 data-[state=checked]:bg-[#ff5a36]"
+        />
+      </div>
+    </div>
+  );
+}
+
+function ToastItem({ toast, onClose }) {
+  const toneClass =
+    toast.type === "success"
+      ? "border-emerald-400/25 bg-emerald-500/12 text-emerald-50"
+      : toast.type === "error"
+        ? "border-red-400/25 bg-red-500/12 text-red-50"
+        : "border-sky-400/25 bg-sky-500/12 text-sky-50";
+
+  const icon =
+    toast.type === "success" ? "✓" : toast.type === "error" ? "!" : "i";
+
+  return (
+    <div
+      className={`pointer-events-auto w-full max-w-sm rounded-2xl border shadow-2xl backdrop-blur ${toneClass}`}
+    >
+      <div className="flex items-start gap-3 p-4">
+        <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-black/20 text-sm font-bold">
+          {icon}
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-semibold">{toast.title}</p>
+          {toast.message ? (
+            <p className="mt-1 text-xs leading-5 text-white/75">{toast.message}</p>
+          ) : null}
+        </div>
+        <button
+          type="button"
+          onClick={() => onClose(toast.id)}
+          className="rounded-full p-1 text-white/70 transition hover:bg-white/10 hover:text-white"
+          aria-label="Fermer la notification"
+        >
+          ✕
+        </button>
+      </div>
+    </div>
+  );
+}
 
 // ================================================
 //  PAGE GESTION DES VÉHICULES & MARQUES
@@ -40,6 +128,14 @@ export default function VehiculesPage() {
   const [openAddBrand, setOpenAddBrand] = useState(false);
   const [openEditBrand, setOpenEditBrand] = useState(false);
   const [currentBrand, setCurrentBrand] = useState(null);
+  const [toasts, setToasts] = useState([]);
+  const toastCounterRef = useRef(0);
+  const [deleteDialog, setDeleteDialog] = useState({
+    open: false,
+    type: null,
+    id: null,
+    name: "",
+  });
 
   // --------------------------------------------------
   // Helper pour avoir un URL image propre
@@ -127,6 +223,38 @@ export default function VehiculesPage() {
     newImage: null,
   });
 
+  const inputClassName =
+    "border border-white/10 bg-[#161616] text-white placeholder:text-white/35 focus-visible:border-[#ff5a36] focus-visible:ring-[#ff5a36]/25";
+
+  const selectClassName =
+    "min-h-11 rounded-xl border border-white/10 bg-[#161616] px-3 py-2 text-sm text-white outline-none transition focus:border-[#ff5a36] focus:ring-2 focus:ring-[#ff5a36]/20";
+
+  const fileInputClassName =
+    "w-full rounded-xl border border-dashed border-white/15 bg-[#161616] p-2.5 text-sm text-white file:mr-3 file:rounded-full file:border-0 file:bg-white/10 file:px-3 file:py-1.5 file:text-xs file:font-semibold file:text-white hover:file:bg-white/15";
+
+  const showToast = (type, title, message = "") => {
+    toastCounterRef.current += 1;
+    const id = `toast-${toastCounterRef.current}`;
+
+    setToasts((prev) => [...prev, { id, type, title, message }]);
+
+    window.setTimeout(() => {
+      setToasts((prev) => prev.filter((toast) => toast.id !== id));
+    }, 4200);
+  };
+
+  const removeToast = (id) => {
+    setToasts((prev) => prev.filter((toast) => toast.id !== id));
+  };
+
+  const openDeleteDialog = (type, id, name) => {
+    setDeleteDialog({ open: true, type, id, name });
+  };
+
+  const closeDeleteDialog = () => {
+    setDeleteDialog({ open: false, type: null, id: null, name: "" });
+  };
+
   // --------------------------------------------------
   // IMAGES DYNAMIQUES (ADD)
   // --------------------------------------------------
@@ -190,14 +318,22 @@ export default function VehiculesPage() {
       });
 
       if (res.data.success) {
-        alert("🚗 Véhicule ajouté !");
         setOpenAdd(false);
         setFormAdd(emptyAddForm);
         fetchVehicles();
+        showToast(
+          "success",
+          "Vehicule ajoute",
+          "Le nouveau vehicule est maintenant disponible dans le dashboard."
+        );
       }
     } catch (err) {
       console.error(err);
-      alert("Erreur lors de l'ajout !");
+      showToast(
+        "error",
+        "Ajout impossible",
+        "Le vehicule na pas pu etre ajoute. Verifie les champs et reessaie."
+      );
     }
   };
 
@@ -232,13 +368,21 @@ export default function VehiculesPage() {
       });
 
       if (res.data.success) {
-        alert("✏️ Véhicule modifié !");
         setOpenEdit(false);
         fetchVehicles();
+        showToast(
+          "success",
+          "Vehicule mis a jour",
+          "Les modifications du vehicule ont bien ete enregistrees."
+        );
       }
     } catch (err) {
       console.error(err);
-      alert("Erreur lors de la modification !");
+      showToast(
+        "error",
+        "Modification impossible",
+        "Le vehicule na pas pu etre modifie. Reessaie dans quelques instants."
+      );
     }
   };
 
@@ -246,11 +390,24 @@ export default function VehiculesPage() {
   // DELETE VEHICULE
   // --------------------------------------------------
   const deleteVehicle = async (id) => {
-    if (!confirm("Supprimer ce véhicule ?")) return;
-    await axios.delete(`${API_URL}/${id}`, {
-      headers: { Authorization: token },
-    });
-    fetchVehicles();
+    try {
+      await axios.delete(`${API_URL}/${id}`, {
+        headers: { Authorization: token },
+      });
+      fetchVehicles();
+      showToast(
+        "success",
+        "Vehicule supprime",
+        "Le vehicule a ete retire de la liste admin."
+      );
+    } catch (err) {
+      console.error(err);
+      showToast(
+        "error",
+        "Suppression impossible",
+        "Le vehicule na pas pu etre supprime."
+      );
+    }
   };
 
   // --------------------------------------------------
@@ -267,14 +424,22 @@ export default function VehiculesPage() {
       });
 
       if (res.data.success) {
-        alert("🏁 Marque ajoutée !");
         setOpenAddBrand(false);
         setFormAddBrand({ title: "", image: null });
         fetchBrands();
+        showToast(
+          "success",
+          "Marque ajoutee",
+          "La nouvelle marque est disponible dans les filtres et les formulaires."
+        );
       }
     } catch (err) {
       console.error(err);
-      alert("Erreur lors de l'ajout de la marque !");
+      showToast(
+        "error",
+        "Ajout de marque impossible",
+        "La marque na pas pu etre ajoutee."
+      );
     }
   };
 
@@ -294,13 +459,21 @@ export default function VehiculesPage() {
       });
 
       if (res.data.success) {
-        alert("✏️ Marque modifiée !");
         setOpenEditBrand(false);
         fetchBrands();
+        showToast(
+          "success",
+          "Marque mise a jour",
+          "Les informations de la marque ont bien ete sauvegardees."
+        );
       }
     } catch (err) {
       console.error(err);
-      alert("Erreur lors de la modification de la marque !");
+      showToast(
+        "error",
+        "Modification de marque impossible",
+        "La mise a jour de la marque a echoue."
+      );
     }
   };
 
@@ -308,11 +481,39 @@ export default function VehiculesPage() {
   // DELETE BRAND
   // --------------------------------------------------
   const deleteBrand = async (id) => {
-    if (!confirm("Supprimer cette marque ?")) return;
-    await axios.delete(`${BRAND_API_URL}/${id}`, {
-      headers: { Authorization: token },
-    });
-    fetchBrands();
+    try {
+      await axios.delete(`${BRAND_API_URL}/${id}`, {
+        headers: { Authorization: token },
+      });
+      fetchBrands();
+      showToast(
+        "success",
+        "Marque supprimee",
+        "La marque a bien ete retiree du catalogue admin."
+      );
+    } catch (err) {
+      console.error(err);
+      showToast(
+        "error",
+        "Suppression de marque impossible",
+        "La marque na pas pu etre supprimee."
+      );
+    }
+  };
+
+  const confirmDeleteAction = async () => {
+    const { type, id } = deleteDialog;
+
+    closeDeleteDialog();
+
+    if (type === "vehicle") {
+      await deleteVehicle(id);
+      return;
+    }
+
+    if (type === "brand") {
+      await deleteBrand(id);
+    }
   };
 
   // --------------------------------------------------
@@ -330,6 +531,12 @@ export default function VehiculesPage() {
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-gradient-to-br from-black via-[#111] to-[#300] px-4 py-6 text-white sm:px-6 lg:px-8 lg:py-10">
+      <div className="pointer-events-none fixed inset-x-4 top-4 z-[100] flex flex-col items-stretch gap-3 sm:left-auto sm:right-6 sm:w-full sm:max-w-sm">
+        {toasts.map((toast) => (
+          <ToastItem key={toast.id} toast={toast} onClose={removeToast} />
+        ))}
+      </div>
+
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-10 lg:gap-12">
         {/* HEADER VEHICULES */}
         <div className="flex flex-col gap-4 rounded-3xl border border-white/10 bg-white/[0.03] p-4 shadow-2xl backdrop-blur sm:p-6 md:flex-row md:items-center md:justify-between">
@@ -351,12 +558,47 @@ export default function VehiculesPage() {
           </button>
         </div>
 
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 shadow-xl backdrop-blur">
+            <p className="text-xs uppercase tracking-[0.24em] text-white/40">Vehicules</p>
+            <p className="mt-3 text-3xl font-bold text-white">{vehicles.length}</p>
+            <p className="mt-1 text-sm text-white/60">Modeles geres dans le dashboard.</p>
+          </div>
+          <div className="rounded-2xl border border-emerald-400/15 bg-emerald-500/[0.06] p-4 shadow-xl backdrop-blur">
+            <p className="text-xs uppercase tracking-[0.24em] text-emerald-200/70">Disponibles</p>
+            <p className="mt-3 text-3xl font-bold text-emerald-100">
+              {vehicles.filter((car) => car.disponible).length}
+            </p>
+            <p className="mt-1 text-sm text-emerald-100/65">Vehicules reservables actuellement.</p>
+          </div>
+          <div className="rounded-2xl border border-amber-400/15 bg-amber-500/[0.06] p-4 shadow-xl backdrop-blur">
+            <p className="text-xs uppercase tracking-[0.24em] text-amber-200/70">Vedettes</p>
+            <p className="mt-3 text-3xl font-bold text-amber-100">
+              {vehicles.filter((car) => car.vedette).length}
+            </p>
+            <p className="mt-1 text-sm text-amber-100/65">Modeles mis en avant sur le site.</p>
+          </div>
+          <div className="rounded-2xl border border-sky-400/15 bg-sky-500/[0.06] p-4 shadow-xl backdrop-blur">
+            <p className="text-xs uppercase tracking-[0.24em] text-sky-200/70">Marques</p>
+            <p className="mt-3 text-3xl font-bold text-sky-100">{brands.length}</p>
+            <p className="mt-1 text-sm text-sky-100/65">Marques visibles dans les filtres.</p>
+          </div>
+        </div>
+
         {/* LISTE DES VEHICULES */}
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+        <div className="grid grid-cols-1 gap-5 min-[560px]:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+          {vehicles.length === 0 && (
+            <div className="col-span-full rounded-3xl border border-dashed border-white/15 bg-white/[0.03] p-8 text-center shadow-xl backdrop-blur">
+              <p className="text-lg font-semibold text-white">Aucun vehicule pour le moment</p>
+              <p className="mt-2 text-sm leading-6 text-white/60">
+                Ajoute un premier vehicule pour remplir le catalogue admin et commencer a gerer les disponibilites.
+              </p>
+            </div>
+          )}
           {vehicles.map((car) => (
             <div
               key={car._id}
-              className="group overflow-hidden rounded-2xl border border-white/10 bg-[#0f0f0f]/75 shadow-2xl shadow-black/30 backdrop-blur transition duration-300 hover:-translate-y-1 hover:border-red-500/40"
+              className="group flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#0f0f0f]/75 shadow-2xl shadow-black/30 backdrop-blur transition duration-300 hover:-translate-y-1 hover:border-red-500/40"
             >
               <div className="relative aspect-[16/10] w-full overflow-hidden bg-black">
                 <img
@@ -372,7 +614,7 @@ export default function VehiculesPage() {
                 )}
               </div>
 
-              <div className="flex h-full flex-col gap-3 p-4 sm:p-5">
+              <div className="flex h-full flex-1 flex-col gap-3 p-4 sm:p-5">
                 <div className="min-w-0">
                   <h2 className="truncate text-lg font-bold sm:text-xl">
                     {car.nom}
@@ -398,7 +640,22 @@ export default function VehiculesPage() {
                   </span>
                 </div>
 
-                <div className="mt-2 grid grid-cols-1 gap-2 xs:grid-cols-2 sm:grid-cols-2">
+                <div className="grid grid-cols-3 gap-2 text-center text-xs text-white/70">
+                  <div className="rounded-2xl border border-white/8 bg-white/[0.03] px-2 py-3">
+                    <p className="text-[10px] uppercase tracking-[0.18em] text-white/35">Places</p>
+                    <p className="mt-1 text-sm font-semibold text-white">{car.specifications?.seats || "-"}</p>
+                  </div>
+                  <div className="rounded-2xl border border-white/8 bg-white/[0.03] px-2 py-3">
+                    <p className="text-[10px] uppercase tracking-[0.18em] text-white/35">Fuel</p>
+                    <p className="mt-1 truncate text-sm font-semibold text-white">{car.specifications?.fuel || "-"}</p>
+                  </div>
+                  <div className="rounded-2xl border border-white/8 bg-white/[0.03] px-2 py-3">
+                    <p className="text-[10px] uppercase tracking-[0.18em] text-white/35">Boite</p>
+                    <p className="mt-1 truncate text-sm font-semibold text-white">{car.specifications?.transmission || "-"}</p>
+                  </div>
+                </div>
+
+                <div className="mt-auto grid grid-cols-1 gap-2 min-[380px]:grid-cols-2">
                   <button
                     onClick={() => {
                       setCurrentCar(car);
@@ -415,14 +672,14 @@ export default function VehiculesPage() {
                       });
                       setOpenEdit(true);
                     }}
-                    className="rounded-full bg-blue-600 px-4 py-2.5 text-sm font-semibold transition hover:bg-blue-500"
+                    className="w-full rounded-full bg-blue-600 px-4 py-2.5 text-sm font-semibold transition hover:bg-blue-500"
                   >
                     ✏️ Modifier
                   </button>
 
                   <button
-                    onClick={() => deleteVehicle(car._id)}
-                    className="rounded-full bg-red-600 px-4 py-2.5 text-sm font-semibold transition hover:bg-red-500"
+                    onClick={() => openDeleteDialog("vehicle", car._id, car.nom)}
+                    className="w-full rounded-full bg-red-600 px-4 py-2.5 text-sm font-semibold transition hover:bg-red-500"
                   >
                     🗑 Supprimer
                   </button>
@@ -455,11 +712,19 @@ export default function VehiculesPage() {
             </button>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8">
+          <div className="grid grid-cols-2 gap-4 min-[420px]:grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8">
+            {brands.length === 0 && (
+              <div className="col-span-full rounded-3xl border border-dashed border-white/15 bg-white/[0.03] p-8 text-center shadow-xl backdrop-blur">
+                <p className="text-lg font-semibold text-white">Aucune marque disponible</p>
+                <p className="mt-2 text-sm leading-6 text-white/60">
+                  Ajoute au moins une marque pour remplir les filtres et les formulaires de vehicules.
+                </p>
+              </div>
+            )}
             {brands.map((brand) => (
               <div
                 key={brand._id}
-                className="flex flex-col items-center gap-3 rounded-2xl border border-white/10 bg-[#0f0f0f]/75 p-4 text-center shadow-xl shadow-black/20 backdrop-blur transition hover:-translate-y-1 hover:border-red-500/40"
+                className="flex min-h-[220px] flex-col items-center gap-3 rounded-2xl border border-white/10 bg-[#0f0f0f]/75 p-4 text-center shadow-xl shadow-black/20 backdrop-blur transition hover:-translate-y-1 hover:border-red-500/40"
               >
                 <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-full border border-white/10 bg-black sm:h-24 sm:w-24">
                   {brand.image ? (
@@ -477,7 +742,7 @@ export default function VehiculesPage() {
                   {brand.title}
                 </p>
 
-                <div className="grid w-full grid-cols-2 gap-2">
+                <div className="mt-auto grid w-full grid-cols-2 gap-2">
                   <button
                     onClick={() => {
                       setCurrentBrand(brand);
@@ -494,7 +759,9 @@ export default function VehiculesPage() {
                   </button>
 
                   <button
-                    onClick={() => deleteBrand(brand._id)}
+                    onClick={() =>
+                      openDeleteDialog("brand", brand._id, brand.title)
+                    }
                     className="rounded-full bg-red-600 py-2 text-sm font-semibold transition hover:bg-red-500"
                   >
                     🗑
@@ -509,7 +776,7 @@ export default function VehiculesPage() {
             POPUP AJOUT VEHICULE
         ========================================================= */}
         <Dialog open={openAdd} onOpenChange={setOpenAdd}>
-          <DialogContent className="max-h-[92dvh] w-[calc(100vw-1.5rem)] overflow-hidden rounded-2xl border border-[#333] bg-[#111] p-0 text-white sm:w-full sm:max-w-xl lg:max-w-2xl">
+          <DialogContent className="max-h-[92dvh] w-[calc(100vw-1rem)] overflow-hidden rounded-2xl border border-[#333] bg-[#111] p-0 text-white sm:w-full sm:max-w-2xl">
             <div className="max-h-[92dvh] overflow-y-auto px-4 py-5 sm:px-6 sm:py-6">
               <DialogHeader className="pr-8">
                 <DialogTitle className="text-2xl font-bold text-[#ff2d2d] sm:text-3xl">
@@ -517,11 +784,20 @@ export default function VehiculesPage() {
                 </DialogTitle>
               </DialogHeader>
 
+              <div className="mt-4 rounded-2xl border border-[#ff5a36]/20 bg-gradient-to-r from-[#ff5a36]/10 via-[#ff2d2d]/5 to-transparent p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#ffb8a8]">
+                  Nouveau vehicule
+                </p>
+                <p className="mt-2 text-sm leading-6 text-white/70">
+                  Renseigne les infos principales, puis active les options de visibilite et de disponibilite via les toggles ci-dessous.
+                </p>
+              </div>
+
               <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
                 {/* NOM */}
                 <Input
                   placeholder="Nom"
-                  className="bg-[#1a1a1a]"
+                  className={inputClassName}
                   onChange={(e) =>
                     setFormAdd({ ...formAdd, nom: e.target.value })
                   }
@@ -529,7 +805,7 @@ export default function VehiculesPage() {
 
                 {/* MARQUE */}
                 <select
-                  className="min-h-10 rounded-md bg-[#1a1a1a] p-2 text-sm outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring"
+                  className={selectClassName}
                   onChange={(e) =>
                     setFormAdd({ ...formAdd, marque: e.target.value })
                   }
@@ -544,7 +820,7 @@ export default function VehiculesPage() {
 
                 {/* TYPE / CATÉGORIE */}
                 <select
-                  className="min-h-10 rounded-md bg-[#1a1a1a] p-2 text-sm outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring"
+                  className={selectClassName}
                   onChange={(e) =>
                     setFormAdd({ ...formAdd, type: e.target.value })
                   }
@@ -561,7 +837,7 @@ export default function VehiculesPage() {
                 <Input
                   type="number"
                   placeholder="Prix par jour"
-                  className="bg-[#1a1a1a]"
+                  className={inputClassName}
                   onChange={(e) =>
                     setFormAdd({ ...formAdd, prixParJour: e.target.value })
                   }
@@ -569,7 +845,7 @@ export default function VehiculesPage() {
 
                 {/* DESCRIPTION */}
                 <Input
-                  className="bg-[#1a1a1a] sm:col-span-2"
+                  className={`${inputClassName} sm:col-span-2`}
                   placeholder="Description"
                   onChange={(e) =>
                     setFormAdd({ ...formAdd, description: e.target.value })
@@ -577,30 +853,30 @@ export default function VehiculesPage() {
                 />
 
                 {/* VEDETTE */}
-                <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:col-span-2">
-                  <Switch
-                    checked={formAdd.vedette}
-                    onCheckedChange={(v) =>
-                      setFormAdd({ ...formAdd, vedette: v })
-                    }
-                  />
-                  <Label>Véhicule Vedette</Label>
-                </div>
+                <ToggleCard
+                  checked={formAdd.vedette}
+                  onCheckedChange={(v) => setFormAdd({ ...formAdd, vedette: v })}
+                  label="Vehicule vedette"
+                  description="Mets ce modele en avant sur les zones premium et les selections prioritaires du site."
+                  activeText="Actif"
+                  inactiveText="Standard"
+                />
 
                 {/* DISPONIBLE */}
-                <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:col-span-2">
-                  <Switch
-                    checked={formAdd.disponible}
-                    onCheckedChange={(v) =>
-                      setFormAdd({ ...formAdd, disponible: v })
-                    }
-                  />
-                  <Label>Disponible</Label>
-                </div>
+                <ToggleCard
+                  checked={formAdd.disponible}
+                  onCheckedChange={(v) =>
+                    setFormAdd({ ...formAdd, disponible: v })
+                  }
+                  label="Disponibilite immediate"
+                  description="Controle si le vehicule apparait comme reservable immediatement dans le catalogue client."
+                  activeText="En ligne"
+                  inactiveText="Pause"
+                />
 
                 {/* SIÈGES */}
                 <select
-                  className="min-h-10 rounded-md bg-[#1a1a1a] p-2 text-sm outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring"
+                  className={selectClassName}
                   onChange={(e) =>
                     setFormAdd({ ...formAdd, seats: e.target.value })
                   }
@@ -614,7 +890,7 @@ export default function VehiculesPage() {
 
                 {/* CARBURANT */}
                 <select
-                  className="min-h-10 rounded-md bg-[#1a1a1a] p-2 text-sm outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring"
+                  className={selectClassName}
                   onChange={(e) =>
                     setFormAdd({ ...formAdd, fuel: e.target.value })
                   }
@@ -628,7 +904,7 @@ export default function VehiculesPage() {
 
                 {/* TRANSMISSION */}
                 <select
-                  className="min-h-10 rounded-md bg-[#1a1a1a] p-2 text-sm outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring sm:col-span-2"
+                  className={`${selectClassName} sm:col-span-2`}
                   onChange={(e) =>
                     setFormAdd({ ...formAdd, transmission: e.target.value })
                   }
@@ -651,7 +927,7 @@ export default function VehiculesPage() {
                     >
                       <input
                         type="file"
-                        className="w-full rounded-md bg-[#1a1a1a] p-2 text-sm"
+                        className={fileInputClassName}
                         onChange={(e) => updateAddImage(idx, e.target.files[0])}
                       />
                       <button
@@ -665,7 +941,7 @@ export default function VehiculesPage() {
 
                   <button
                     onClick={addImageInputAdd}
-                    className="w-full rounded-md bg-gray-700 py-2.5 text-sm font-semibold transition hover:bg-gray-600"
+                    className="w-full rounded-xl bg-gray-700 py-2.5 text-sm font-semibold transition hover:bg-gray-600"
                   >
                     ➕ Ajouter une image
                   </button>
@@ -686,7 +962,7 @@ export default function VehiculesPage() {
             POPUP EDIT VEHICULE
         ========================================================= */}
         <Dialog open={openEdit} onOpenChange={setOpenEdit}>
-          <DialogContent className="max-h-[92dvh] w-[calc(100vw-1.5rem)] overflow-hidden rounded-2xl border border-[#333] bg-[#111] p-0 text-white sm:w-full sm:max-w-2xl lg:max-w-3xl">
+          <DialogContent className="max-h-[92dvh] w-[calc(100vw-1rem)] overflow-hidden rounded-2xl border border-[#333] bg-[#111] p-0 text-white sm:w-full sm:max-w-3xl">
             <div className="max-h-[92dvh] overflow-y-auto px-4 py-5 sm:px-6 sm:py-6">
               <DialogHeader className="pr-8">
                 <DialogTitle className="break-words text-2xl font-bold text-blue-400 sm:text-3xl">
@@ -694,11 +970,20 @@ export default function VehiculesPage() {
                 </DialogTitle>
               </DialogHeader>
 
+              <div className="mt-4 rounded-2xl border border-sky-400/20 bg-gradient-to-r from-sky-500/10 via-sky-400/5 to-transparent p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-sky-200/90">
+                  Edition vehicule
+                </p>
+                <p className="mt-2 text-sm leading-6 text-white/70">
+                  Ajuste la fiche du modele, mets a jour ses medias et pilote ses statuts sans quitter la vue admin.
+                </p>
+              </div>
+
               <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
                 {/* NOM */}
                 <Input
                   value={formEdit.nom || ""}
-                  className="bg-[#1a1a1a]"
+                  className={inputClassName}
                   onChange={(e) =>
                     setFormEdit({ ...formEdit, nom: e.target.value })
                   }
@@ -706,7 +991,7 @@ export default function VehiculesPage() {
 
                 {/* MARQUE */}
                 <select
-                  className="min-h-10 rounded-md bg-[#1a1a1a] p-2 text-sm outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring"
+                  className={selectClassName}
                   value={formEdit.marque || ""}
                   onChange={(e) =>
                     setFormEdit({ ...formEdit, marque: e.target.value })
@@ -722,7 +1007,7 @@ export default function VehiculesPage() {
 
                 {/* TYPE / CATÉGORIE */}
                 <select
-                  className="min-h-10 rounded-md bg-[#1a1a1a] p-2 text-sm outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring"
+                  className={selectClassName}
                   value={formEdit.type || ""}
                   onChange={(e) =>
                     setFormEdit({ ...formEdit, type: e.target.value })
@@ -740,7 +1025,7 @@ export default function VehiculesPage() {
                 <Input
                   type="number"
                   value={formEdit.prixParJour || ""}
-                  className="bg-[#1a1a1a]"
+                  className={inputClassName}
                   onChange={(e) =>
                     setFormEdit({
                       ...formEdit,
@@ -751,7 +1036,7 @@ export default function VehiculesPage() {
 
                 {/* DESCRIPTION */}
                 <Input
-                  className="bg-[#1a1a1a] sm:col-span-2"
+                  className={`${inputClassName} sm:col-span-2`}
                   value={formEdit.description || ""}
                   onChange={(e) =>
                     setFormEdit({
@@ -762,30 +1047,34 @@ export default function VehiculesPage() {
                 />
 
                 {/* VEDETTE */}
-                <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:col-span-2">
-                  <Switch
-                    checked={Boolean(formEdit.vedette)}
-                    onCheckedChange={(v) =>
-                      setFormEdit({ ...formEdit, vedette: v })
-                    }
-                  />
-                  <Label>Véhicule Vedette</Label>
-                </div>
+                <ToggleCard
+                  checked={Boolean(formEdit.vedette)}
+                  onCheckedChange={(v) =>
+                    setFormEdit({ ...formEdit, vedette: v })
+                  }
+                  label="Vehicule vedette"
+                  description="Conserve ce modele parmi les propositions mises en avant dans l'experience publique."
+                  activeText="Actif"
+                  inactiveText="Standard"
+                  tone="blue"
+                />
 
                 {/* DISPONIBLE */}
-                <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:col-span-2">
-                  <Switch
-                    checked={Boolean(formEdit.disponible)}
-                    onCheckedChange={(v) =>
-                      setFormEdit({ ...formEdit, disponible: v })
-                    }
-                  />
-                  <Label>Disponible</Label>
-                </div>
+                <ToggleCard
+                  checked={Boolean(formEdit.disponible)}
+                  onCheckedChange={(v) =>
+                    setFormEdit({ ...formEdit, disponible: v })
+                  }
+                  label="Disponibilite immediate"
+                  description="Active ou suspend la reservation de ce vehicule sans modifier le reste de sa fiche."
+                  activeText="En ligne"
+                  inactiveText="Pause"
+                  tone="blue"
+                />
 
                 {/* SIÈGES */}
                 <select
-                  className="min-h-10 rounded-md bg-[#1a1a1a] p-2 text-sm outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring"
+                  className={selectClassName}
                   value={formEdit.seats || ""}
                   onChange={(e) =>
                     setFormEdit({ ...formEdit, seats: e.target.value })
@@ -800,7 +1089,7 @@ export default function VehiculesPage() {
 
                 {/* CARBURANT */}
                 <select
-                  className="min-h-10 rounded-md bg-[#1a1a1a] p-2 text-sm outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring"
+                  className={selectClassName}
                   value={formEdit.fuel || ""}
                   onChange={(e) =>
                     setFormEdit({ ...formEdit, fuel: e.target.value })
@@ -815,7 +1104,7 @@ export default function VehiculesPage() {
 
                 {/* TRANSMISSION */}
                 <select
-                  className="min-h-10 rounded-md bg-[#1a1a1a] p-2 text-sm outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring sm:col-span-2"
+                  className={`${selectClassName} sm:col-span-2`}
                   value={formEdit.transmission || ""}
                   onChange={(e) =>
                     setFormEdit({
@@ -835,7 +1124,7 @@ export default function VehiculesPage() {
                     Images actuelles :
                   </h3>
 
-                  <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+                   <div className="mt-3 grid grid-cols-2 gap-3 min-[420px]:grid-cols-3 lg:grid-cols-4">
                     {(formEdit.images || []).map((img, i) => (
                       <div
                         key={i}
@@ -876,7 +1165,7 @@ export default function VehiculesPage() {
                     >
                       <input
                         type="file"
-                        className="w-full rounded-md bg-[#1a1a1a] p-2 text-sm"
+                        className={fileInputClassName}
                         onChange={(e) =>
                           updateEditImage(i, e.target.files[0])
                         }
@@ -892,7 +1181,7 @@ export default function VehiculesPage() {
 
                   <button
                     onClick={addImageInputEdit}
-                    className="w-full rounded-md bg-gray-700 py-2.5 text-sm font-semibold transition hover:bg-gray-600"
+                    className="w-full rounded-xl bg-gray-700 py-2.5 text-sm font-semibold transition hover:bg-gray-600"
                   >
                     ➕ Ajouter une image
                   </button>
@@ -913,7 +1202,7 @@ export default function VehiculesPage() {
             POPUP AJOUT MARQUE
         ========================================================= */}
         <Dialog open={openAddBrand} onOpenChange={setOpenAddBrand}>
-          <DialogContent className="max-h-[92dvh] w-[calc(100vw-1.5rem)] overflow-hidden rounded-2xl border border-[#333] bg-[#111] p-0 text-white sm:w-full sm:max-w-md">
+          <DialogContent className="max-h-[92dvh] w-[calc(100vw-1rem)] overflow-hidden rounded-2xl border border-[#333] bg-[#111] p-0 text-white sm:w-full sm:max-w-md">
             <div className="max-h-[92dvh] overflow-y-auto px-4 py-5 sm:px-6 sm:py-6">
               <DialogHeader className="pr-8">
                 <DialogTitle className="text-2xl font-bold text-[#ff2d2d]">
@@ -921,11 +1210,20 @@ export default function VehiculesPage() {
                 </DialogTitle>
               </DialogHeader>
 
+              <div className="mt-4 rounded-2xl border border-[#ff5a36]/20 bg-gradient-to-r from-[#ff5a36]/10 via-[#ff2d2d]/5 to-transparent p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#ffb8a8]">
+                  Nouvelle marque
+                </p>
+                <p className="mt-2 text-sm leading-6 text-white/70">
+                  Ajoute un nom et un logo pour enrichir les filtres et le rendu du catalogue.
+                </p>
+              </div>
+
               <div className="mt-5 space-y-4">
                 <div>
                   <Label>Nom de la marque</Label>
                   <Input
-                    className="mt-2 bg-[#1a1a1a]"
+                    className={`mt-2 ${inputClassName}`}
                     placeholder="Ex: Mercedes"
                     value={formAddBrand.title}
                     onChange={(e) =>
@@ -941,7 +1239,7 @@ export default function VehiculesPage() {
                   <Label>Logo / Image</Label>
                   <input
                     type="file"
-                    className="mt-2 w-full rounded-md bg-[#1a1a1a] p-2 text-sm"
+                    className={`mt-2 ${fileInputClassName}`}
                     onChange={(e) =>
                       setFormAddBrand({
                         ...formAddBrand,
@@ -966,7 +1264,7 @@ export default function VehiculesPage() {
             POPUP EDIT MARQUE
         ========================================================= */}
         <Dialog open={openEditBrand} onOpenChange={setOpenEditBrand}>
-          <DialogContent className="max-h-[92dvh] w-[calc(100vw-1.5rem)] overflow-hidden rounded-2xl border border-[#333] bg-[#111] p-0 text-white sm:w-full sm:max-w-md">
+          <DialogContent className="max-h-[92dvh] w-[calc(100vw-1rem)] overflow-hidden rounded-2xl border border-[#333] bg-[#111] p-0 text-white sm:w-full sm:max-w-md">
             <div className="max-h-[92dvh] overflow-y-auto px-4 py-5 sm:px-6 sm:py-6">
               <DialogHeader className="pr-8">
                 <DialogTitle className="text-2xl font-bold text-blue-400">
@@ -974,11 +1272,20 @@ export default function VehiculesPage() {
                 </DialogTitle>
               </DialogHeader>
 
+              <div className="mt-4 rounded-2xl border border-sky-400/20 bg-gradient-to-r from-sky-500/10 via-sky-400/5 to-transparent p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-sky-200/90">
+                  Edition marque
+                </p>
+                <p className="mt-2 text-sm leading-6 text-white/70">
+                  Mets a jour l identite visuelle de la marque sans casser l experience actuelle du dashboard.
+                </p>
+              </div>
+
               <div className="mt-5 space-y-4">
                 <div>
                   <Label>Nom de la marque</Label>
                   <Input
-                    className="mt-2 bg-[#1a1a1a]"
+                    className={`mt-2 ${inputClassName}`}
                     value={formEditBrand.title}
                     onChange={(e) =>
                       setFormEditBrand({
@@ -1010,7 +1317,7 @@ export default function VehiculesPage() {
                   <Label>Changer le logo</Label>
                   <input
                     type="file"
-                    className="mt-2 w-full rounded-md bg-[#1a1a1a] p-2 text-sm"
+                    className={`mt-2 ${fileInputClassName}`}
                     onChange={(e) =>
                       setFormEditBrand({
                         ...formEditBrand,
@@ -1027,6 +1334,57 @@ export default function VehiculesPage() {
               >
                 Sauvegarder la marque
               </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        <Dialog
+          open={deleteDialog.open}
+          onOpenChange={(open) => {
+            if (!open) closeDeleteDialog();
+          }}
+        >
+          <DialogContent className="w-[calc(100vw-1rem)] overflow-hidden rounded-[28px] border border-red-500/20 bg-[#101314] p-0 text-white shadow-2xl shadow-black/40 sm:max-w-lg">
+            <div className="relative overflow-hidden p-5 sm:p-6">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,90,54,0.18),_transparent_50%)]" />
+              <div className="relative">
+                <div className="inline-flex rounded-full border border-red-400/20 bg-red-500/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-red-200">
+                  Action sensible
+                </div>
+
+                <DialogHeader className="mt-4 space-y-3 text-left">
+                  <DialogTitle className="text-2xl font-bold leading-tight text-white sm:text-[2rem]">
+                    Supprimer cet element ?
+                  </DialogTitle>
+                </DialogHeader>
+
+                <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+                  <p className="text-sm leading-6 text-white/75">
+                    Tu es sur le point de supprimer
+                    <span className="mx-1 font-semibold text-white">
+                      {deleteDialog.name || "cet element"}
+                    </span>
+                    . Cette action retirera definitivement la fiche du dashboard.
+                  </p>
+                </div>
+
+                <div className="mt-5 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+                  <button
+                    type="button"
+                    onClick={closeDeleteDialog}
+                    className="w-full rounded-full border border-white/10 bg-white/5 px-5 py-3 text-sm font-semibold text-white/85 transition hover:bg-white/10 sm:w-auto"
+                  >
+                    Annuler
+                  </button>
+                  <button
+                    type="button"
+                    onClick={confirmDeleteAction}
+                    className="w-full rounded-full bg-gradient-to-r from-[#ff5a36] to-[#ff2d2d] px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-red-900/30 transition hover:brightness-110 sm:w-auto"
+                  >
+                    Oui, supprimer
+                  </button>
+                </div>
+              </div>
             </div>
           </DialogContent>
         </Dialog>

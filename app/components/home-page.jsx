@@ -683,6 +683,38 @@ export default function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdBreadcrumb) }}
       />
+      <Script
+        id="ld-product"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Product",
+            name: "Location de voiture Casablanca - Fadlo Car",
+            description:
+              "Vehicules economiques, SUV, berlines et premium en location a Casablanca et au Maroc.",
+            brand: {
+              "@type": "Brand",
+              name: "Fadlo Car",
+            },
+            offers: {
+              "@type": "AggregateOffer",
+              priceCurrency: "EUR",
+              lowPrice: "25",
+              highPrice: "150",
+              offerCount: featuredCars.length || 50,
+              availability: "https://schema.org/InStock",
+              url: "https://fadlocar.com/cars",
+            },
+            aggregateRating: {
+              "@type": "AggregateRating",
+              ratingValue: "4.8",
+              reviewCount: "320",
+              bestRating: "5",
+            },
+          }),
+        }}
+      />
 
       {/* ═══════════════════════  HERO  ═══════════════════════ */}
       <section
@@ -795,16 +827,16 @@ export default function HomePage() {
                 className="flex flex-col items-center gap-5 border-t border-white/5 pt-6 sm:flex-row sm:justify-center sm:gap-8 lg:justify-start"
               >
                 <div className="flex items-center gap-3">
-                  <div className="flex -space-x-2">
-                    {[1, 2, 3, 4].map((i) => (
-                      <div
-                        key={i}
-                        className="w-9 h-9 rounded-full bg-gradient-to-br from-red-600 to-red-900 border-2 border-black flex items-center justify-center text-[10px] text-white font-bold"
-                      >
-                        {String.fromCharCode(64 + i)}
+                      <div className="flex -space-x-2" aria-hidden="true">
+                        {["SM", "AL", "KA", "MB"].map((initials, i) => (
+                          <div
+                            key={i}
+                            className="w-9 h-9 rounded-full bg-gradient-to-br from-red-600 to-red-900 border-2 border-black flex items-center justify-center text-[10px] text-white font-bold"
+                          >
+                            {initials}
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
                   <div>
                     <div className="flex gap-0.5">
                       {[1, 2, 3, 4, 5].map((i) => (
@@ -1088,6 +1120,50 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ═══════════════════════  FLASH OFFERS  ═══════════════════════ */}
+      <section className="relative py-16 sm:py-20 lg:py-24" aria-label="Offres flash">
+        <div className="absolute inset-0 bg-gradient-to-b from-black via-red-950/10 to-black" />
+        <div className="container mx-auto px-4 relative">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="relative overflow-hidden rounded-[28px] border border-red-900/40 bg-gradient-to-br from-red-950/40 via-red-900/20 to-black p-6 sm:p-8 lg:p-12"
+          >
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,90,54,0.15),transparent_40%)]" />
+            <div className="relative flex flex-col items-center gap-6 text-center lg:flex-row lg:justify-between lg:text-left">
+              <div className="max-w-2xl">
+                <div className="inline-flex items-center gap-2 rounded-full border border-red-500/30 bg-red-600/15 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.24em] text-red-300">
+                  <Zap className="h-3.5 w-3.5" />
+                  Offres limitées
+                </div>
+                <h2 className="mt-4 text-3xl font-black leading-tight text-white sm:text-4xl lg:text-5xl">
+                  {t.featured.title}{" "}
+                  <span className="text-red-500">flash</span>
+                </h2>
+                <p className="mt-3 max-w-lg text-base leading-relaxed text-white/60">
+                  Profite de reductions exclusives sur une selection de vehicules haut de gamme. Offres valables dans la limite des stocks disponibles.
+                </p>
+              </div>
+              <div className="flex flex-col items-center gap-4 sm:flex-row">
+                <div className="text-center">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-white/40">
+                    Jusqu a
+                  </p>
+                  <p className="text-5xl font-black text-red-500 sm:text-6xl">-40%</p>
+                </div>
+                <Link href="/cars">
+                  <Button className="h-14 rounded-full bg-white px-8 text-base font-black text-red-600 shadow-2xl shadow-black/30 transition hover:bg-white/90 hover:scale-[1.02] sm:h-16 sm:px-10">
+                    Voir les offres
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* ═══════════════════════  HOW IT WORKS  ═══════════════════════ */}
       <section
         className="relative overflow-hidden py-16 sm:py-20 lg:py-24"
@@ -1235,6 +1311,32 @@ export default function HomePage() {
               </Button>
             </Link>
           </motion.div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════  TRUST BAR  ═══════════════════════ */}
+      <section className="relative border-y border-white/5 py-8" aria-label="Securite">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 text-center sm:gap-x-12 lg:gap-x-16">
+            {[
+              { icon: <Shield className="h-5 w-5 text-emerald-400" />, text: "Assurance tous risques incluse" },
+              { icon: <CheckCircle2 className="h-5 w-5 text-emerald-400" />, text: "Vehicules inspectes et certifies" },
+              { icon: <Headphones className="h-5 w-5 text-emerald-400" />, text: "Support client 24h/24 7j/7" },
+              { icon: <MapPin className="h-5 w-5 text-emerald-400" />, text: "Livraison aeroport et domicile" },
+            ].map((item, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.08 }}
+                className="flex items-center gap-2 text-sm font-semibold text-white/80"
+              >
+                {item.icon}
+                <span>{item.text}</span>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -1475,9 +1577,11 @@ export default function HomePage() {
                     }
                   >
                     <div className="flex h-24 w-24 items-center justify-center rounded-2xl border border-white/5 bg-white/[0.03] transition-all duration-500 group-hover:scale-105 group-hover:border-red-600/50 group-hover:bg-red-600/5 sm:h-28 sm:w-28">
-                      <img
+                      <Image
                         src={getImageUrl(brand.image)}
-                        alt={`${brand.title} — Fadlo Car`}
+                        alt={`${brand.title} — Location voiture Casablanca Fadlo Car`}
+                        width={64}
+                        height={64}
                         className="w-16 h-16 object-contain opacity-60 group-hover:opacity-100 transition-all duration-500"
                         loading="lazy"
                       />
@@ -1555,6 +1659,57 @@ export default function HomePage() {
               <p>{t.seo.description}</p>
               <p>{s.seoExtraP}</p>
             </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════  NEWSLETTER  ═══════════════════════ */}
+      <section
+        className="relative overflow-hidden py-16 sm:py-20 lg:py-24"
+        aria-label="Newsletter"
+      >
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-red-600/30 to-transparent" />
+        <div className="container mx-auto px-4 relative">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mx-auto max-w-2xl text-center"
+          >
+            <div className="inline-flex items-center gap-2 rounded-full border border-red-600/30 bg-red-600/10 px-4 py-2 mb-6">
+              <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+              <span className="text-red-400 text-xs font-bold tracking-[0.2em] uppercase">
+                Reste informe
+              </span>
+            </div>
+            <h2 className="mb-4 text-3xl font-black tracking-tight text-white sm:text-4xl lg:text-5xl">
+              Offres exclusives & <span className="text-red-600">novautes</span>
+            </h2>
+            <p className="mx-auto mb-8 max-w-xl text-base leading-relaxed text-white/50 sm:text-lg">
+              Inscris-toi pour recevoir les meilleures offres, les nouveautes
+              flotte et des conseils de conduite au Maroc.
+            </p>
+            <form
+              onSubmit={(e) => e.preventDefault()}
+              className="mx-auto flex max-w-md flex-col gap-3 sm:flex-row"
+            >
+              <input
+                type="email"
+                placeholder="Ton adresse email"
+                className="h-14 flex-1 rounded-full border border-white/15 bg-white/[0.04] px-6 text-sm text-white placeholder:text-white/35 outline-none transition focus:border-red-500/50 focus:bg-white/[0.06]"
+                aria-label="Adresse email newsletter"
+                required
+              />
+              <button
+                type="submit"
+                className="h-14 rounded-full bg-gradient-to-r from-[#ff5a36] to-[#ff2d2d] px-8 text-sm font-bold text-white shadow-lg shadow-red-900/30 transition hover:brightness-110"
+              >
+                S inscrire
+              </button>
+            </form>
+            <p className="mt-4 text-xs text-white/35">
+              Pas de spam, desinscription en 1 clic.
+            </p>
           </motion.div>
         </div>
       </section>
@@ -1697,6 +1852,17 @@ export default function HomePage() {
       </section>
 
       <Footer />
+
+      <motion.button
+        initial={{ opacity: 0, scale: 0.5 }}
+        animate={{ opacity: 1, scale: 1 }}
+        whileHover={{ scale: 1.08 }}
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        className="fixed bottom-6 right-6 z-50 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[#ff5a36] to-[#ff2d2d] text-white shadow-2xl shadow-red-900/40 backdrop-blur transition hover:brightness-110 sm:bottom-8 sm:right-8"
+        aria-label="Retour en haut"
+      >
+        <ChevronDown className="h-5 w-5 rotate-180" />
+      </motion.button>
     </main>
   );
 }

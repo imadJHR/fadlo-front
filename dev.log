@@ -1,0 +1,82 @@
+
+> client@0.1.0 dev
+> next dev
+
+   ▲ Next.js 16.0.10 (Turbopack)
+   - Local:         http://localhost:3000
+   - Network:       http://192.168.11.145:3000
+   - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 6.2s
+ ○ Compiling / ...
+ GET / 200 in 14.8s (compile: 13.3s, render: 1494ms)
+ ○ Compiling /cars ...
+ GET /cars 200 in 4.0s (compile: 3.9s, render: 115ms)
+ GET /admin/login 200 in 2.5s (compile: 2.1s, proxy.ts: 11ms, render: 414ms)
+ GET /admin/dashboard 200 in 2.8s (compile: 2.7s, proxy.ts: 21ms, render: 76ms)
+ GET /admin/vehicules 200 in 1938ms (compile: 1833ms, proxy.ts: 14ms, render: 91ms)
+ GET /admin/vehicules 200 in 468ms (compile: 22ms, proxy.ts: 21ms, render: 426ms)
+ ✓ Compiled in 2.8s
+ ✓ Compiled in 630ms
+ GET /admin/vehicules 200 in 1928ms (compile: 874ms, proxy.ts: 189ms, render: 865ms)
+ ✓ Compiled in 1046ms
+ ✓ Compiled in 706ms
+ GET /admin/vehicules 200 in 1439ms (compile: 625ms, proxy.ts: 58ms, render: 756ms)
+ ✓ Compiled in 1161ms
+ GET /admin/dashboard 200 in 480ms (compile: 213ms, proxy.ts: 89ms, render: 178ms)
+ ✓ Compiled in 2.6s
+ GET /admin/dashboard 200 in 3.5s (compile: 1534ms, proxy.ts: 84ms, render: 1923ms)
+ ✓ Compiled in 1585ms
+ ○ Compiling /admin/commandes ...
+ GET /admin/commandes 200 in 11.2s (compile: 10.8s, proxy.ts: 91ms, render: 358ms)
+ GET /admin/commandes 200 in 185ms (compile: 22ms, proxy.ts: 25ms, render: 138ms)
+ GET /admin/dashboard 200 in 1952ms (compile: 1685ms, proxy.ts: 37ms, render: 230ms)
+ GET /admin/commandes 200 in 357ms (compile: 227ms, proxy.ts: 33ms, render: 97ms)
+ ✓ Compiled in 4s
+ GET /admin/commandes 200 in 1620ms (compile: 1224ms, proxy.ts: 20ms, render: 376ms)
+ ✓ Compiled in 678ms
+ ✓ Compiled in 434ms
+ GET /admin/commandes 200 in 5.4s (compile: 812ms, proxy.ts: 25ms, render: 4.6s)
+ ○ Compiling /admin/messages ...
+ GET /admin/messages 200 in 12.3s (compile: 12.0s, proxy.ts: 22ms, render: 223ms)
+ GET /admin/messages 200 in 117ms (compile: 14ms, proxy.ts: 15ms, render: 88ms)
+ GET /login 404 in 3.7s (compile: 3.4s, render: 303ms)
+ GET / 200 in 933ms (compile: 46ms, render: 887ms)
+ ○ Compiling /admin ...
+ GET /admin 200 in 7.4s (compile: 7.1s, proxy.ts: 21ms, render: 250ms)
+ GET /admin/login 200 in 695ms (compile: 535ms, proxy.ts: 19ms, render: 141ms)
+ GET /admin/dashboard 200 in 874ms (compile: 139ms, proxy.ts: 93ms, render: 642ms)
+ GET /admin/dashboard 200 in 302ms (compile: 28ms, proxy.ts: 24ms, render: 250ms)
+ GET /admin/login 200 in 134ms (compile: 16ms, proxy.ts: 13ms, render: 104ms)
+ GET /admin/login 200 in 1619ms (compile: 30ms, proxy.ts: 17ms, render: 1572ms)
+ ✓ Compiled in 2.3s
+ GET /admin/login 200 in 854ms (compile: 463ms, proxy.ts: 209ms, render: 181ms)
+ GET /admin/login 200 in 122ms (compile: 17ms, proxy.ts: 19ms, render: 86ms)
+ GET /admin/login 200 in 1179ms (compile: 81ms, proxy.ts: 137ms, render: 962ms)
+ ✓ Compiled in 1909ms
+ GET /admin/dashboard 200 in 463ms (compile: 244ms, proxy.ts: 70ms, render: 149ms)
+ GET /admin/dashboard 200 in 1160ms (compile: 24ms, proxy.ts: 14ms, render: 1122ms)
+ GET /admin/login 200 in 650ms (compile: 501ms, proxy.ts: 17ms, render: 132ms)
+ GET / 200 in 1577ms (compile: 460ms, render: 1117ms)
+ ✓ Compiled in 826ms
+ GET / 200 in 1335ms (compile: 983ms, render: 352ms)
+ ✓ Compiled in 2.1s
+ ✓ Compiled in 680ms
+ GET / 200 in 1260ms (compile: 361ms, render: 900ms)
+ ✓ Compiled in 1290ms
+ ✓ Compiled in 2.2s
+ ✓ Compiled in 424ms
+ ✓ Compiled in 415ms
+ ✓ Compiled in 234ms
+ GET / 200 in 1137ms (compile: 374ms, render: 763ms)
+   ▲ Next.js 16.0.10 (Turbopack)
+   - Local:         http://localhost:3000
+   - Network:       http://192.168.11.145:3000
+   - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 3.9s
+ ○ Compiling / ...
+ GET / 200 in 11.9s (compile: 10.9s, render: 946ms)
+ GET /cars 200 in 2.4s (compile: 2.3s, render: 68ms)
