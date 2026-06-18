@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useEffect, useRef } from "react";
+import Script from "next/script";
 import Navbar from "@/app/components/navbar";
 import Footer from "@/app/components/footer";
 import { useLanguage } from "@/app/components/language-provider";
@@ -10,10 +11,59 @@ import Image from "next/image";
 export default function BlogClient({ post }) {
   const { language } = useLanguage();
   const contentRef = useRef(null);
+  const canonicalUrl = `https://fadlocar.com/blog/${post.slug}`;
 
   const title = language === "fr" ? post.title_fr : post.title_en || post.title;
   const excerpt = language === "fr" ? post.excerpt_fr : post.excerpt_en || post.excerpt;
   const category = language === "fr" ? post.category_fr : post.category_en || post.category;
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: post.title_fr || post.title,
+    description: post.excerpt_fr || post.excerpt,
+    image: [`https://fadlocar.com${post.image}`],
+    datePublished: post.date,
+    dateModified: post.date,
+    author: {
+      "@type": "Organization",
+      name: post.author,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "Fadlo Car",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://fadlocar.com/logo.png",
+      },
+    },
+    mainEntityOfPage: canonicalUrl,
+    articleSection: post.category_fr || post.category,
+    inLanguage: "fr-MA",
+  };
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Accueil",
+        item: "https://fadlocar.com",
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Blog",
+        item: "https://fadlocar.com/blog",
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: post.title_fr || post.title,
+        item: canonicalUrl,
+      },
+    ],
+  };
   
   // Only use French content since English content isn't provided in your data
   const content = post.content;
@@ -58,6 +108,16 @@ export default function BlogClient({ post }) {
 
   return (
     <main className="min-h-screen bg-black text-white overflow-hidden">
+      <Script
+        id={`blog-article-${post.slug}`}
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+      <Script
+        id={`blog-breadcrumb-${post.slug}`}
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <Navbar />
 
       {/* HERO SECTION WITH BACKGROUND GRADIENT */}

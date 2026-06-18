@@ -509,7 +509,7 @@ export default function ServicesClientPage() {
     name: "Fadlo Car",
     description: "Premium car rental and chauffeur services in Casablanca, Morocco.",
     url: "https://fadlocar.com/services",
-    telephone: "+212600000000",
+    telephone: "+212661528619",
     address: {
       "@type": "PostalAddress",
       addressLocality: "Casablanca",
@@ -548,7 +548,7 @@ export default function ServicesClientPage() {
       />
 
       {/* ═══════════════════════  HERO  ═══════════════════════ */}
-      <section className="relative pt-32 pb-28 overflow-hidden">
+      <section className="relative overflow-hidden px-4 pb-20 pt-28 sm:px-6 md:pb-24 md:pt-36">
         <div className="absolute inset-0 bg-black" />
         <div className="absolute top-[-20%] right-[-10%] w-[700px] h-[700px] bg-red-600/15 rounded-full blur-[200px]" />
         <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-red-900/10 rounded-full blur-[150px]" />
@@ -565,94 +565,133 @@ export default function ServicesClientPage() {
           }}
         />
 
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="text-center max-w-4xl mx-auto">
+        <div className="container mx-auto relative z-10">
+          <div className="grid items-center gap-10 lg:grid-cols-[1.02fr_0.98fr] lg:gap-14">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 bg-red-600/10 border border-red-600/30 rounded-full px-6 py-2.5 mb-8"
+              className="max-w-3xl"
             >
-              <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-              <span className="text-red-400 text-sm font-bold tracking-wider uppercase">
-                {s.heroTag}
-              </span>
+              <div className="inline-flex items-center gap-2 rounded-full border border-red-600/30 bg-red-600/10 px-5 py-2.5">
+                <span className="h-2 w-2 rounded-full bg-red-500 animate-pulse" />
+                <span className="text-red-400 text-sm font-bold tracking-wider uppercase">
+                  {s.heroTag}
+                </span>
+              </div>
+
+              <motion.h1
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.1 }}
+                className="mt-6 text-5xl font-black leading-[0.9] tracking-tighter text-white sm:text-6xl lg:text-7xl xl:text-8xl"
+              >
+                {s.heroTitle}{" "}
+                <span className="relative inline-block">
+                  <span className="text-red-600">{s.heroTitleSpan}</span>
+                  <motion.span
+                    className="absolute -bottom-2 left-0 h-1.5 w-full rounded-full bg-red-600"
+                    initial={{ scaleX: 0 }}
+                    animate={{ scaleX: 1 }}
+                    transition={{ duration: 0.8, delay: 0.8 }}
+                    style={{ transformOrigin: "left" }}
+                  />
+                </span>
+              </motion.h1>
+
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                className="mt-6 max-w-2xl text-lg leading-relaxed text-white/56 sm:text-xl"
+              >
+                {s.heroDesc}
+              </motion.p>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+                className="mt-8 flex flex-wrap gap-4"
+              >
+                <Link href="/cars">
+                  <Button
+                    size="lg"
+                    className="group h-16 rounded-full border-0 bg-red-600 px-10 text-lg text-white shadow-2xl shadow-red-600/30 transition-all duration-500 hover:scale-[1.02] hover:bg-red-700 hover:shadow-red-600/50"
+                  >
+                    {s.bookNow}
+                    <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-2" />
+                  </Button>
+                </Link>
+                <a href="tel:+212661528619">
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="h-16 rounded-full border-white/20 px-10 text-lg text-white backdrop-blur-sm transition-all duration-500 hover:border-white/40 hover:bg-white/5"
+                  >
+                    <Phone className="mr-2 h-5 w-5" />
+                    {s.callUs}
+                  </Button>
+                </a>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.6 }}
+                className="mt-8 flex flex-wrap gap-6"
+              >
+                {[
+                  { icon: <Shield className="h-4 w-4" />, text: s.trustInsurance },
+                  { icon: <Clock className="h-4 w-4" />, text: s.trust247 },
+                  { icon: <MapPin className="h-4 w-4" />, text: s.trustDelivery },
+                  { icon: <Star className="h-4 w-4" />, text: s.trustClients },
+                ].map((badge, i) => (
+                  <div key={i} className="flex items-center gap-2 text-sm text-white/45">
+                    <span className="text-red-500">{badge.icon}</span>
+                    <span className="font-medium">{badge.text}</span>
+                  </div>
+                ))}
+              </motion.div>
             </motion.div>
 
-            <motion.h1
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.1 }}
-              className="text-5xl sm:text-6xl lg:text-8xl font-black text-white leading-[0.9] tracking-tighter mb-6"
-            >
-              {s.heroTitle}{" "}
-              <span className="relative inline-block">
-                <span className="text-red-600">{s.heroTitleSpan}</span>
-                <motion.span
-                  className="absolute -bottom-2 left-0 w-full h-1.5 bg-red-600 rounded-full"
-                  initial={{ scaleX: 0 }}
-                  animate={{ scaleX: 1 }}
-                  transition={{ duration: 0.8, delay: 0.8 }}
-                  style={{ transformOrigin: "left" }}
-                />
-              </span>
-            </motion.h1>
-
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              className="text-lg sm:text-xl text-white/50 max-w-2xl mx-auto leading-relaxed mb-10"
-            >
-              {s.heroDesc}
-            </motion.p>
-
-            {/* CTA buttons */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="flex flex-wrap justify-center gap-4 mb-12"
+              initial={{ opacity: 0, x: 24 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.65, delay: 0.15 }}
+              className="relative"
             >
-              <Link href="/cars">
-                <Button
-                  size="lg"
-                  className="group bg-red-600 hover:bg-red-700 text-white rounded-full px-10 text-lg h-16 shadow-2xl shadow-red-600/30 transition-all duration-500 hover:shadow-red-600/50 hover:scale-105 border-0"
-                >
-                  {s.bookNow}
-                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-2 transition-transform duration-300" />
-                </Button>
-              </Link>
-              <a href="tel:+212661528619">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="text-white border-white/20 hover:bg-white/5 hover:border-white/40 rounded-full px-10 text-lg h-16 backdrop-blur-sm transition-all duration-500"
-                >
-                  <Phone className="mr-2 h-5 w-5" />
-                  {s.callUs}
-                </Button>
-              </a>
-            </motion.div>
+              <div className="absolute -left-8 top-10 h-28 w-28 rounded-full bg-red-600/15 blur-3xl" />
+              <div className="absolute -right-8 bottom-0 h-40 w-40 rounded-full bg-white/8 blur-3xl" />
+              <div className="relative overflow-hidden rounded-[32px] border border-white/10 bg-[linear-gradient(145deg,rgba(19,19,21,0.96),rgba(9,9,11,0.9))] p-5 shadow-[0_28px_80px_rgba(0,0,0,0.42)] sm:p-6">
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {services.slice(0, 4).map((service) => {
+                    const IconComponent = service.icon
+                    const serviceData = s[service.id]
 
-            {/* Trust badges */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.6 }}
-              className="flex flex-wrap justify-center gap-6"
-            >
-              {[
-                { icon: <Shield className="h-4 w-4" />, text: s.trustInsurance },
-                { icon: <Clock className="h-4 w-4" />, text: s.trust247 },
-                { icon: <MapPin className="h-4 w-4" />, text: s.trustDelivery },
-                { icon: <Star className="h-4 w-4" />, text: s.trustClients },
-              ].map((badge, i) => (
-                <div key={i} className="flex items-center gap-2 text-white/40 text-sm">
-                  <span className="text-red-500">{badge.icon}</span>
-                  <span className="font-medium">{badge.text}</span>
+                    return (
+                      <div
+                        key={service.id}
+                        className="rounded-3xl border border-white/8 bg-white/[0.035] p-5 backdrop-blur-sm transition-all duration-300 hover:border-red-600/35 hover:bg-white/[0.05]"
+                      >
+                        <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl border border-red-600/20 bg-red-600/10 text-red-400">
+                          <IconComponent className="h-5 w-5" />
+                        </div>
+                        <h3 className="text-lg font-bold text-white">{serviceData.title}</h3>
+                        <p className="mt-2 text-sm leading-relaxed text-white/50">{serviceData.description}</p>
+                      </div>
+                    )
+                  })}
                 </div>
-              ))}
+
+                <div className="mt-5 rounded-[28px] border border-white/8 bg-black/35 p-5 sm:p-6">
+                  <p className="text-xs font-bold uppercase tracking-[0.24em] text-red-300">Casablanca • Marrakech • Maroc</p>
+                  <p className="mt-3 text-xl font-bold text-white">Services premium pour aeroport, entreprise, mariage et longue duree</p>
+                  <p className="mt-2 text-sm leading-relaxed text-white/52">
+                    Une approche sur mesure pour particuliers, professionnels et evenements avec accompagnement humain et disponibilite reelle.
+                  </p>
+                </div>
+              </div>
             </motion.div>
           </div>
         </div>
@@ -742,11 +781,11 @@ export default function ServicesClientPage() {
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   className="group"
                 >
-                  <div className="bg-black/60 border border-white/5 rounded-3xl p-8 hover:border-red-900/50 transition-all duration-500 overflow-hidden relative h-full flex flex-col">
-                    <div className="absolute inset-0 bg-gradient-to-br from-red-600/0 to-red-600/0 group-hover:from-red-600/5 group-hover:to-red-900/10 transition-all duration-500" />
+                  <div className="relative flex h-full flex-col overflow-hidden rounded-[28px] border border-white/8 bg-[linear-gradient(145deg,rgba(19,19,21,0.96),rgba(9,9,11,0.9))] p-8 transition-all duration-500 hover:-translate-y-1 hover:border-red-600/35 hover:shadow-[0_24px_60px_rgba(0,0,0,0.34)]">
+                    <div className="absolute inset-0 bg-gradient-to-br from-red-600/0 to-red-600/0 transition-all duration-500 group-hover:from-red-600/5 group-hover:to-red-900/10" />
 
                     <div className="relative z-10 flex flex-col h-full">
-                      <div className="w-16 h-16 bg-red-600/10 border border-red-600/20 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-red-600/20 transition-all duration-500">
+                      <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-red-600/20 bg-red-600/10 transition-all duration-500 group-hover:scale-110 group-hover:bg-red-600/20">
                         <IconComponent className="h-7 w-7 text-red-500" />
                       </div>
 
@@ -767,7 +806,7 @@ export default function ServicesClientPage() {
 
                       <Button
                         variant="outline"
-                        className="border-red-900/40 text-white hover:bg-red-600/10 hover:border-red-600/60 rounded-xl w-full group/btn transition-all duration-300"
+                        className="group/btn w-full rounded-xl border-red-900/40 text-white transition-all duration-300 hover:border-red-600/60 hover:bg-red-600/10"
                         onClick={() => setSelected(service)}
                       >
                         {s.showDetails}
@@ -1191,7 +1230,7 @@ export default function ServicesClientPage() {
                     <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-2 transition-transform duration-300" />
                   </Button>
                 </Link>
-                <a href="tel:+212600000000">
+                <a href="tel:+212661528619">
                   <Button
                     size="lg"
                     variant="outline"

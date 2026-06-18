@@ -1,0 +1,28 @@
+<svg width="1600" height="900" viewBox="0 0 1600 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="1600" height="900" fill="#080808"/>
+<rect width="1600" height="900" fill="url(#bg)"/>
+<circle cx="1360" cy="156" r="256" fill="#FF4F43" fill-opacity="0.15"/>
+<circle cx="234" cy="775" r="336" fill="#A81616" fill-opacity="0.2"/>
+<rect x="84" y="78" width="352" height="56" rx="28" fill="#111214" fill-opacity="0.82" stroke="#FFFFFF" stroke-opacity="0.08"/>
+<text x="116" y="115" fill="#FFE0C7" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700" letter-spacing="4">EVENEMENTS D'ENTREPRISE</text>
+<text x="84" y="232" fill="#F9F7F4" font-family="Arial, Helvetica, sans-serif" font-size="82" font-weight="800">Voitures de luxe</text>
+<text x="84" y="329" fill="#FF5A4F" font-family="Arial, Helvetica, sans-serif" font-size="98" font-weight="900">POUR EVENEMENTS</text>
+<text x="84" y="417" fill="#F9F7F4" font-family="Arial, Helvetica, sans-serif" font-size="68" font-weight="700">Business & prestige au Maroc</text>
+<text x="88" y="499" fill="#C5BDB7" font-family="Arial, Helvetica, sans-serif" font-size="31">Lancements, roadshows, accueil VIP et image de marque pour vos operations corporate.</text>
+<rect x="978" y="482" width="474" height="282" rx="28" fill="#111317" stroke="#FFFFFF" stroke-opacity="0.07"/>
+<rect x="1018" y="526" width="394" height="154" rx="20" fill="#0A0D11"/>
+<path d="M1052 640H1136V566H1196V640H1280V520H1338L1238 440L1138 520H1052V640Z" fill="#1A1F27"/>
+<path d="M1060 648H1402" stroke="#FF5A4F" stroke-width="4" stroke-linecap="round"/>
+<rect x="1048" y="706" width="142" height="26" rx="13" fill="#FF5A4F" fill-opacity="0.2"/>
+<text x="1080" y="724" fill="#FFD0CB" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700">VIP reception</text>
+<rect x="1206" y="706" width="170" height="26" rx="13" fill="#FFFFFF" fill-opacity="0.08"/>
+<text x="1236" y="724" fill="#F4F2EF" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700">brand presence</text>
+<text x="1022" y="792" fill="#FFFFFF" fill-opacity="0.88" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700">EXECUTIVE MOBILITY BY FADLO CAR</text>
+<defs>
+<linearGradient id="bg" x1="124" y1="89" x2="1488" y2="846" gradientUnits="userSpaceOnUse">
+<stop stop-color="#17181B"/>
+<stop offset="0.48" stop-color="#101114"/>
+<stop offset="1" stop-color="#080808"/>
+</linearGradient>
+</defs>
+</svg>

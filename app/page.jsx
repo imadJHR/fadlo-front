@@ -1,9 +1,9 @@
 import HomePage from "./components/home-page";
 
 const title =
-  "Location Voiture Casablanca | Fadlo Car - Agence de Location au Maroc";
+  "Location Voiture Casablanca Pas Cher | Fadlo Car - Aeroport Mohammed V";
 const description =
-  "Reservez une voiture a Casablanca avec Fadlo Car. Vehicules economiques, SUV et voitures premium, livraison aeroport Mohammed V, assurance et assistance 24/7.";
+  "Location voiture Casablanca avec Fadlo Car : citadines, SUV, berlines et voitures premium. Reservation rapide, livraison a l'aeroport Mohammed V, assurance incluse et assistance 24/7 au Maroc.";
 const canonicalUrl = "https://fadlocar.com";
 
 export const metadata = {
@@ -11,12 +11,24 @@ export const metadata = {
   title,
   description,
   applicationName: "Fadlo Car",
+  authors: [{ name: "Fadlo Car", url: canonicalUrl }],
+  creator: "Fadlo Car",
+  publisher: "Fadlo Car",
   category: "Car Rental",
+  referrer: "origin-when-cross-origin",
+  formatDetection: {
+    email: true,
+    address: true,
+    telephone: true,
+  },
   keywords: [
     "location voiture casablanca",
     "location de voiture casablanca",
     "louer voiture casablanca",
     "location voiture aeroport casablanca",
+    "location voiture aeroport mohammed v",
+    "location voiture casablanca pas cher",
+    "agence location voiture casablanca aeroport",
     "location voiture maroc",
     "car rental casablanca",
     "Fadlo Car",
@@ -69,6 +81,7 @@ export const metadata = {
     },
   },
   other: {
+    classification: "Car Rental, Travel, Automotive",
     "geo.region": "MA-CAS",
     "geo.placename": "Casablanca",
     "geo.position": "33.5170286119286;-7.654152168275857",

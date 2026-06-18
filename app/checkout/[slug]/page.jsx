@@ -1,12 +1,21 @@
 import CheckoutClientPage from "./client-page"
 import { notFound } from "next/navigation"
 
+const API_BASE = "https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws"
+
+const getImageUrl = (img) => {
+  if (!img || typeof img !== "string") return "/hero.png"
+  if (img.startsWith("http://") || img.startsWith("https://")) return img
+  if (img.startsWith("//")) return `https:${img}`
+  return `${API_BASE}/${img.replace(/^\/+/, "").replace(/\\/g, "/")}`
+}
+
 // ----------- SEO DYNAMIQUE -----------
 export async function generateMetadata(props) {
   const { slug } = await props.params
 
   try {
-    const res = await fetch(`https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/api/vehicules/${slug}`, {
+    const res = await fetch(`${API_BASE}/api/vehicules/${slug}`, {
       cache: "no-store",
     })
 
@@ -21,13 +30,19 @@ export async function generateMetadata(props) {
       return { title: "Checkout - FADLO CAR" }
     }
 
+    const image = getImageUrl(car.images?.[0])
+
     return {
-      title: `Checkout – ${car.nom} | FADLO CAR`,
-      description: `Rent the ${car.nom}. Fast, secure and premium car rental in Morocco.`,
+      title: `Reservation ${car.nom} | Fadlo Car Casablanca`,
+      description: `Finalisez votre demande de reservation pour ${car.nom}. Location voiture premium a Casablanca avec confirmation rapide.`,
+      robots: {
+        index: false,
+        follow: true,
+      },
       openGraph: {
-        title: `Checkout – ${car.nom}`,
-        description: `Rent the ${car.nom} today. Premium service & best prices in Morocco.`,
-        images: [`https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/${car.images?.[0]}`],
+        title: `Reservation ${car.nom} | Fadlo Car`,
+        description: `Location ${car.nom} a Casablanca avec Fadlo Car.`,
+        images: [image],
       },
     }
   } catch (err) {
@@ -43,7 +58,7 @@ export default async function CheckoutPage(props) {
   if (!slug) return notFound()
 
   try {
-    const res = await fetch(`https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/api/vehicules/${slug}`, {
+    const res = await fetch(`${API_BASE}/api/vehicules/${slug}`, {
       cache: "no-store",
     })
 

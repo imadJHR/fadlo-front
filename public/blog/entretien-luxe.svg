@@ -1,0 +1,27 @@
+<svg width="1600" height="900" viewBox="0 0 1600 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="1600" height="900" fill="#070809"/>
+<rect width="1600" height="900" fill="url(#bg)"/>
+<circle cx="1322" cy="176" r="260" fill="#FF5A36" fill-opacity="0.14"/>
+<circle cx="274" cy="782" r="350" fill="#911414" fill-opacity="0.2"/>
+<rect x="84" y="78" width="286" height="56" rx="28" fill="#101214" fill-opacity="0.82" stroke="#FFFFFF" stroke-opacity="0.08"/>
+<text x="116" y="115" fill="#FFE4C9" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700" letter-spacing="4">CONSEILS ENTRETIEN</text>
+<text x="84" y="232" fill="#F8F7F3" font-family="Arial, Helvetica, sans-serif" font-size="84" font-weight="800">Entretenir une</text>
+<text x="84" y="329" fill="#FF614F" font-family="Arial, Helvetica, sans-serif" font-size="100" font-weight="900">VOITURE DE LUXE</text>
+<text x="84" y="415" fill="#F8F7F3" font-family="Arial, Helvetica, sans-serif" font-size="68" font-weight="700">au Maroc</text>
+<text x="88" y="493" fill="#BFB8B1" font-family="Arial, Helvetica, sans-serif" font-size="31">Climat, maintenance, detailing et bonnes pratiques pour preserver style et performance.</text>
+<circle cx="1177" cy="621" r="162" fill="#0D1015" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="2"/>
+<circle cx="1177" cy="621" r="104" fill="#11151C" stroke="#FF614F" stroke-opacity="0.45" stroke-width="16" stroke-dasharray="18 18"/>
+<circle cx="1177" cy="621" r="48" fill="#FF614F" fill-opacity="0.22" stroke="#FF614F" stroke-width="10"/>
+<rect x="1048" y="446" width="258" height="48" rx="24" fill="#14171D" stroke="#FFFFFF" stroke-opacity="0.08"/>
+<text x="1085" y="478" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="700">Care • Polish • Protect</text>
+<path d="M1312 706L1368 762" stroke="#FF614F" stroke-width="16" stroke-linecap="round"/>
+<rect x="84" y="746" width="236" height="2" fill="#FF614F" fill-opacity="0.6"/>
+<text x="84" y="800" fill="#FFFFFF" fill-opacity="0.88" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700">FADLO CAR MAINTENANCE INSIGHTS</text>
+<defs>
+<linearGradient id="bg" x1="130" y1="76" x2="1492" y2="844" gradientUnits="userSpaceOnUse">
+<stop stop-color="#14171A"/>
+<stop offset="0.52" stop-color="#101317"/>
+<stop offset="1" stop-color="#080809"/>
+</linearGradient>
+</defs>
+</svg>

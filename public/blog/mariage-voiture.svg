@@ -1,0 +1,28 @@
+<svg width="1600" height="900" viewBox="0 0 1600 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="1600" height="900" fill="#090909"/>
+<rect width="1600" height="900" fill="url(#bg)"/>
+<circle cx="1334" cy="171" r="265" fill="#F25A5A" fill-opacity="0.16"/>
+<circle cx="210" cy="740" r="360" fill="#7B1313" fill-opacity="0.28"/>
+<rect x="84" y="78" width="292" height="56" rx="28" fill="#1A1010" fill-opacity="0.78" stroke="#FFFFFF" stroke-opacity="0.08"/>
+<text x="118" y="115" fill="#FFD9C6" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700" letter-spacing="4">VOITURES MARIAGE</text>
+<text x="84" y="236" fill="#FFF8F3" font-family="Arial, Helvetica, sans-serif" font-size="86" font-weight="800">Top 10 des voitures</text>
+<text x="84" y="331" fill="#FF685E" font-family="Arial, Helvetica, sans-serif" font-size="100" font-weight="900">POUR MARIAGE</text>
+<text x="84" y="419" fill="#FFF8F3" font-family="Arial, Helvetica, sans-serif" font-size="70" font-weight="700">Luxe et elegance au Maroc</text>
+<text x="88" y="502" fill="#CBBEBC" font-family="Arial, Helvetica, sans-serif" font-size="31">Modeles iconiques, corteges, decoration et conseils pour une entree inoubliable.</text>
+<path d="M918 620C966 541 1057 500 1192 500C1321 500 1418 535 1484 606L1505 651C1494 682 1469 703 1428 716C1377 731 1313 739 1238 739H1009C919 739 857 719 824 678C810 662 810 643 823 620H918Z" fill="#181316"/>
+<path d="M966 588C1018 530 1094 500 1195 500C1290 500 1377 522 1456 567C1420 575 1370 581 1306 584L966 588Z" fill="#2B2227"/>
+<path d="M1117 471C1186 436 1268 438 1361 478C1333 495 1283 506 1210 511C1167 511 1136 498 1117 471Z" fill="#47353E"/>
+<circle cx="1029" cy="707" r="57" fill="#101013" stroke="#8C8388" stroke-width="14"/>
+<circle cx="1393" cy="707" r="57" fill="#101013" stroke="#8C8388" stroke-width="14"/>
+<path d="M894 653C941 639 1005 632 1088 632H1376C1424 632 1462 638 1490 649V679C1457 695 1410 703 1351 703H1001C942 703 896 694 863 675L894 653Z" fill="#221C21"/>
+<path d="M1338 458L1361 428L1384 458L1418 465L1394 489L1399 523L1361 507L1323 523L1328 489L1304 465L1338 458Z" fill="#FFF4E2"/>
+<path d="M1280 433L1292 413L1304 433L1326 436L1310 451L1314 472L1292 460L1270 472L1274 451L1258 436L1280 433Z" fill="#FFE2D0" fill-opacity="0.88"/>
+<text x="84" y="790" fill="#FFFFFF" fill-opacity="0.88" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700">FADLO CAR WEDDING SELECTION</text>
+<defs>
+<linearGradient id="bg" x1="122" y1="87" x2="1483" y2="841" gradientUnits="userSpaceOnUse">
+<stop stop-color="#181314"/>
+<stop offset="0.55" stop-color="#151115"/>
+<stop offset="1" stop-color="#080808"/>
+</linearGradient>
+</defs>
+</svg>

@@ -421,6 +421,53 @@ export default function HomePage() {
     ],
   };
 
+  const jsonLdService = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    serviceType: "Location de voiture a Casablanca",
+    provider: {
+      "@type": "AutoRental",
+      name: "Fadlo Car",
+      url: "https://fadlocar.com",
+    },
+    areaServed: ["Casablanca", "Mohammed V Airport", "Morocco"],
+    availableChannel: {
+      "@type": "ServiceChannel",
+      serviceUrl: "https://fadlocar.com/contact",
+      servicePhone: "+212661528619",
+    },
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: "Flotte Fadlo Car",
+      itemListElement: [
+        {
+          "@type": "OfferCatalog",
+          name: "Voitures economiques",
+        },
+        {
+          "@type": "OfferCatalog",
+          name: "SUV et familiales",
+        },
+        {
+          "@type": "OfferCatalog",
+          name: "Berlines et premium",
+        },
+      ],
+    },
+  };
+
+  const jsonLdFeaturedFleet = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Vehicules populaires Fadlo Car",
+    itemListElement: featuredCars.slice(0, 6).map((car, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      url: `https://fadlocar.com/cars/${car.slug || ""}`,
+      name: car.nom,
+    })),
+  };
+
   /* ─── Testimonials per language ─── */
   const testimonialsData = {
     fr: [
@@ -531,6 +578,21 @@ export default function HomePage() {
         "Retrouvez-nous facilement à Casablanca. Livraison possible dans toute la ville.",
       directions: "Itinéraire",
       selectDate: "Sélectionner une date",
+      trustedRentalLabel: "Agence locale de confiance",
+      trustedRentalTitle: "Location de voiture a Casablanca, rapide et transparente",
+      trustedRentalDesc:
+        "Reservation simple, flotte verifiee, remise des cles rapide et accompagnement humain du premier contact jusqu'au retour du vehicule.",
+      seoCardFleetTitle: "Flotte pour ville, business et famille",
+      seoCardFleetDesc:
+        "Citadines economiques, SUV, berlines automatiques et modeles premium disponibles pour Casablanca, l'aeroport Mohammed V et tout le Maroc.",
+      seoCardDeliveryTitle: "Livraison aeroport et hotel",
+      seoCardDeliveryDesc:
+        "Recuperation facile a Casablanca aeroport, en centre-ville ou a votre hotel avec confirmation rapide via telephone ou WhatsApp.",
+      seoCardTrustTitle: "Prix clairs et assistance 24/7",
+      seoCardTrustDesc:
+        "Tarifs competitifs, assurance incluse selon l'offre, disponibilite reelle et support reactif pour une location sans stress.",
+      exploreFleet: "Explorer la flotte",
+      askQuote: "Demander un devis",
       seoExtraP:
         "Fadlo Car est votre partenaire de confiance pour la location de voiture à Casablanca. Que vous cherchiez une voiture économique pour vos déplacements quotidiens, un SUV spacieux pour un voyage en famille, ou une voiture de luxe pour un événement spécial, notre flotte variée répond à tous vos besoins. Profitez de tarifs compétitifs, d'une assurance tous risques incluse et d'un service client disponible 24h/24.",
       statsVehicles: "Véhicules",
@@ -600,6 +662,21 @@ export default function HomePage() {
         "Find us easily in Casablanca. Delivery available throughout the city.",
       directions: "Directions",
       selectDate: "Select a date",
+      trustedRentalLabel: "Trusted local agency",
+      trustedRentalTitle: "Car rental in Casablanca with a smoother booking experience",
+      trustedRentalDesc:
+        "Fast booking, inspected vehicles, quick handover and human support from the first inquiry to the return of your car.",
+      seoCardFleetTitle: "Fleet for city, business and family trips",
+      seoCardFleetDesc:
+        "Economy cars, SUVs, automatic sedans and premium models available for Casablanca, Mohammed V Airport and travel across Morocco.",
+      seoCardDeliveryTitle: "Airport and hotel delivery",
+      seoCardDeliveryDesc:
+        "Easy pick-up in Casablanca airport, downtown or at your hotel with quick confirmation by phone or WhatsApp.",
+      seoCardTrustTitle: "Clear pricing and 24/7 support",
+      seoCardTrustDesc:
+        "Competitive rates, included insurance depending on offer, real availability and responsive support for stress-free rentals.",
+      exploreFleet: "Explore fleet",
+      askQuote: "Request a quote",
       seoExtraP:
         "Fadlo Car is your trusted partner for car rental in Casablanca. Whether you're looking for an economy car for daily commutes, a spacious SUV for a family trip, or a luxury car for a special event, our diverse fleet meets all your needs. Enjoy competitive rates, comprehensive insurance included, and 24/7 customer service.",
       statsVehicles: "Vehicles",
@@ -610,6 +687,29 @@ export default function HomePage() {
   };
 
   const s = localStrings[language] || localStrings.fr;
+  const seoHighlights = [
+    {
+      icon: <Car className="h-5 w-5" />,
+      title: s.seoCardFleetTitle,
+      desc: s.seoCardFleetDesc,
+      href: "/cars",
+      cta: s.exploreFleet,
+    },
+    {
+      icon: <MapPin className="h-5 w-5" />,
+      title: s.seoCardDeliveryTitle,
+      desc: s.seoCardDeliveryDesc,
+      href: "/services",
+      cta: t.nav.services,
+    },
+    {
+      icon: <Shield className="h-5 w-5" />,
+      title: s.seoCardTrustTitle,
+      desc: s.seoCardTrustDesc,
+      href: "/contact",
+      cta: s.askQuote,
+    },
+  ];
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -682,6 +782,16 @@ export default function HomePage() {
         id="ld-breadcrumb"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdBreadcrumb) }}
+      />
+      <Script
+        id="ld-service"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdService) }}
+      />
+      <Script
+        id="ld-featured-fleet"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdFeaturedFleet) }}
       />
       <Script
         id="ld-product"
@@ -991,6 +1101,82 @@ export default function HomePage() {
               </CardContent>
             </Card>
           </motion.div>
+        </div>
+      </section>
+
+      <section
+        className="relative pb-12 sm:pb-16 lg:pb-20"
+        aria-labelledby="local-seo-title"
+      >
+        <div className="container mx-auto px-4">
+          <div className="relative overflow-hidden rounded-[32px] border border-white/8 bg-[linear-gradient(145deg,rgba(17,17,19,0.96),rgba(10,10,12,0.92))] px-6 py-8 shadow-[0_24px_80px_rgba(0,0,0,0.35)] sm:px-8 sm:py-10 lg:px-10">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(220,38,38,0.12),transparent_34%),radial-gradient(circle_at_bottom_left,rgba(255,255,255,0.04),transparent_30%)]" />
+            <div className="relative grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
+              <div>
+                <span className="inline-flex items-center gap-2 rounded-full border border-red-600/25 bg-red-600/10 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.24em] text-red-300">
+                  <MapPin className="h-3.5 w-3.5" />
+                  {s.trustedRentalLabel}
+                </span>
+                <h2
+                  id="local-seo-title"
+                  className="mt-5 max-w-3xl text-3xl font-black leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl"
+                >
+                  {s.trustedRentalTitle}
+                </h2>
+                <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/58 sm:text-lg">
+                  {s.trustedRentalDesc}
+                </p>
+                <div className="mt-6 flex flex-wrap gap-3">
+                  <Link href="/cars">
+                    <Button className="h-12 rounded-full bg-red-600 px-6 font-bold text-white shadow-lg shadow-red-900/30 transition hover:bg-red-700">
+                      {s.exploreFleet}
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </Link>
+                  <Link href="/contact">
+                    <Button
+                      variant="outline"
+                      className="h-12 rounded-full border-white/15 bg-white/[0.03] px-6 font-semibold text-white hover:bg-white/[0.06]"
+                    >
+                      <Phone className="mr-2 h-4 w-4" />
+                      {s.callUs}
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
+                {seoHighlights.map((item, index) => (
+                  <motion.div
+                    key={item.title}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.08 }}
+                    className="group relative overflow-hidden rounded-2xl border border-white/8 bg-white/[0.035] p-5 backdrop-blur-sm"
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-br from-red-600/0 via-transparent to-red-600/0 transition-all duration-500 group-hover:from-red-600/8 group-hover:to-red-600/12" />
+                    <div className="relative">
+                      <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl border border-red-600/20 bg-red-600/10 text-red-400">
+                        {item.icon}
+                      </div>
+                      <h3 className="text-lg font-bold text-white">{item.title}</h3>
+                      <p className="mt-2 text-sm leading-relaxed text-white/52">
+                        {item.desc}
+                      </p>
+                      <Link
+                        href={item.href}
+                        className="mt-4 inline-flex items-center text-sm font-semibold text-red-400 transition hover:text-red-300"
+                      >
+                        {item.cta}
+                        <ChevronRight className="ml-1 h-4 w-4" />
+                      </Link>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 

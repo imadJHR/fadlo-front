@@ -52,27 +52,29 @@ export default function CarCard({ car, index = 0 }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: index * 0.08 }}
     >
-      <Card className="relative overflow-hidden group h-full flex flex-col rounded-3xl border-white/10 bg-gradient-to-br from-zinc-900/60 to-zinc-800/40 backdrop-blur-xl shadow-xl hover:shadow-2xl transition-all duration-500">
+      <Card className="relative overflow-hidden group h-full flex flex-col rounded-[28px] border border-white/10 bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-950 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.45)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_28px_80px_rgba(0,0,0,0.55)]">
         {/* Decorative Glow */}
         <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
         {/* IMAGE */}
-        <div className="relative h-56 overflow-hidden rounded-t-3xl">
+        <div className="relative aspect-[4/3] overflow-hidden rounded-t-[28px] bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.08),transparent_35%),linear-gradient(180deg,#111215_0%,#09090b_100%)] p-4 sm:p-5">
+          <div className="absolute inset-x-4 top-4 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
+          <div className="absolute inset-x-6 bottom-0 h-20 bg-gradient-to-t from-black/55 to-transparent z-10" />
+          <div className="relative h-full w-full overflow-hidden rounded-2xl border border-white/6 bg-gradient-to-b from-stone-900/70 via-zinc-950/55 to-black/80 shadow-inner">
           {/* Gradient overlays */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent z-10" />
-          <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-40 transition-all duration-300 mix-blend-overlay z-10" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/72 via-black/18 to-transparent z-10" />
+            <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-40 transition-all duration-300 mix-blend-overlay z-10" />
 
-          {/* Image */}
-          <motion.img
-            src={imageUrl}
-            alt={name}
-            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[800ms]"
-            whileHover={{ rotate: 0.3 }}
-            onError={(e) => {
-              // fallback if URL broken
-              e.currentTarget.src = "/placeholder-car.jpg"
-            }}
-          />
+            <motion.img
+              src={imageUrl}
+              alt={name}
+              className="h-full w-full object-contain object-center p-3 sm:p-4 group-hover:scale-[1.04] transition-transform duration-[800ms]"
+              whileHover={{ rotate: 0.3 }}
+              onError={(e) => {
+                e.currentTarget.src = "/placeholder-car.jpg"
+              }}
+            />
+          </div>
 
           {/* Badge */}
           <Badge className="absolute top-4 right-4 z-20 bg-primary text-white border-none shadow-md text-sm px-3 py-1 rounded-full backdrop-blur-md">
@@ -81,22 +83,22 @@ export default function CarCard({ car, index = 0 }) {
         </div>
 
         {/* CONTENT */}
-        <CardContent className="p-6 flex-grow">
+        <CardContent className="flex-grow p-6 pt-5">
           <div className="flex justify-between items-start">
-            <h3 className="text-2xl font-semibold text-white group-hover:text-primary transition-colors duration-300 tracking-wide">
+            <h3 className="max-w-[70%] text-[1.8rem] leading-tight font-semibold text-white group-hover:text-primary transition-colors duration-300 tracking-[-0.02em]">
               {name}
             </h3>
 
-            <div className="text-right">
-              <p className="text-3xl font-extrabold text-primary drop-shadow-lg">
+            <div className="text-right rounded-2xl border border-white/8 bg-white/[0.03] px-3 py-2">
+              <p className="text-3xl font-extrabold text-primary drop-shadow-lg leading-none">
                 €{price}
               </p>
-              <p className="text-xs text-gray-400">{t.carsPage.perDay}</p>
+              <p className="mt-1 text-xs text-gray-400">{t.carsPage.perDay}</p>
             </div>
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-3 gap-4 mt-6">
+          <div className="mt-6 grid grid-cols-3 gap-3 rounded-2xl border border-white/6 bg-white/[0.02] px-3 py-4">
             {[
               {
                 icon: <Users className="h-5 w-5" />,
@@ -118,7 +120,7 @@ export default function CarCard({ car, index = 0 }) {
                 transition={{ type: "spring", stiffness: 300 }}
               >
                 {item.icon}
-                <span className="text-xs opacity-80">{item.label}</span>
+                <span className="text-xs text-center opacity-80">{item.label}</span>
               </motion.div>
             ))}
           </div>

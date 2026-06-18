@@ -1,0 +1,28 @@
+<svg width="1600" height="900" viewBox="0 0 1600 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="1600" height="900" fill="#080808"/>
+<rect width="1600" height="900" fill="url(#bg)"/>
+<circle cx="1240" cy="180" r="280" fill="#FF3B30" fill-opacity="0.18"/>
+<circle cx="320" cy="760" r="340" fill="#A11212" fill-opacity="0.24"/>
+<rect x="84" y="78" width="236" height="56" rx="28" fill="#111111" fill-opacity="0.72" stroke="#FFFFFF" stroke-opacity="0.1"/>
+<text x="116" y="115" fill="#FFD6AE" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700" letter-spacing="4">GUIDE COMPLET</text>
+<text x="84" y="248" fill="#F8F5F0" font-family="Arial, Helvetica, sans-serif" font-size="88" font-weight="800">Location Voiture</text>
+<text x="84" y="344" fill="#FF4D42" font-family="Arial, Helvetica, sans-serif" font-size="98" font-weight="900">DE LUXE</text>
+<text x="84" y="428" fill="#F8F5F0" font-family="Arial, Helvetica, sans-serif" font-size="74" font-weight="700">au Maroc 2024</text>
+<text x="88" y="506" fill="#BDB7B1" font-family="Arial, Helvetica, sans-serif" font-size="31" font-weight="400">Premium cars, conseils pratiques, routes iconiques et experience haut de gamme.</text>
+<path d="M930 598C965 533 1045 498 1179 494C1304 491 1401 523 1472 589L1496 647C1498 665 1489 680 1468 691C1414 717 1330 731 1218 733H1010C920 733 857 717 821 685C801 666 799 645 815 624L930 598Z" fill="#111318"/>
+<path d="M944 586C976 529 1054 500 1178 500C1289 500 1379 526 1448 579C1467 594 1478 614 1482 639C1440 612 1363 598 1250 596L944 586Z" fill="#252B34"/>
+<path d="M1003 531C1039 487 1094 463 1168 460C1248 457 1319 477 1381 519C1325 524 1260 525 1186 522L1003 531Z" fill="#3A4350"/>
+<circle cx="1038" cy="710" r="56" fill="#0C0D10" stroke="#7D848F" stroke-width="14"/>
+<circle cx="1381" cy="710" r="56" fill="#0C0D10" stroke="#7D848F" stroke-width="14"/>
+<path d="M904 649C936 638 991 631 1069 629H1365C1411 629 1449 635 1480 646V673C1450 690 1406 699 1348 699H1000C940 699 894 691 862 674L904 649Z" fill="#1C2028"/>
+<rect x="84" y="720" width="228" height="2" fill="#FF4D42" fill-opacity="0.6"/>
+<text x="84" y="777" fill="#FFFFFF" fill-opacity="0.85" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700">FADLO CAR BLOG</text>
+<text x="84" y="822" fill="#C3BDB7" font-family="Arial, Helvetica, sans-serif" font-size="25">Casablanca • Marrakech • Morocco</text>
+<defs>
+<linearGradient id="bg" x1="192" y1="95" x2="1463" y2="835" gradientUnits="userSpaceOnUse">
+<stop stop-color="#181818"/>
+<stop offset="0.45" stop-color="#121216"/>
+<stop offset="1" stop-color="#090909"/>
+</linearGradient>
+</defs>
+</svg>

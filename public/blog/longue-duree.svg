@@ -1,0 +1,28 @@
+<svg width="1600" height="900" viewBox="0 0 1600 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="1600" height="900" fill="#070809"/>
+<rect width="1600" height="900" fill="url(#bg)"/>
+<circle cx="1386" cy="152" r="245" fill="#FF4D42" fill-opacity="0.12"/>
+<circle cx="213" cy="764" r="320" fill="#8A1010" fill-opacity="0.22"/>
+<rect x="84" y="78" width="332" height="56" rx="28" fill="#111214" fill-opacity="0.82" stroke="#FFFFFF" stroke-opacity="0.08"/>
+<text x="116" y="115" fill="#FFE0C4" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700" letter-spacing="4">LOCATION LONGUE DUREE</text>
+<text x="84" y="240" fill="#FAF8F4" font-family="Arial, Helvetica, sans-serif" font-size="82" font-weight="800">Voiture de luxe</text>
+<text x="84" y="334" fill="#FF5A4F" font-family="Arial, Helvetica, sans-serif" font-size="102" font-weight="900">LONGUE DUREE</text>
+<text x="84" y="425" fill="#FAF8F4" font-family="Arial, Helvetica, sans-serif" font-size="66" font-weight="700">Guide economique Maroc</text>
+<text x="88" y="505" fill="#C0B8B2" font-family="Arial, Helvetica, sans-serif" font-size="31">Maîtrisez les couts, les contrats et les avantages d'une location premium sur plusieurs mois.</text>
+<path d="M962 570H1490V719H962V570Z" fill="#12161D" fill-opacity="0.96"/>
+<rect x="990" y="604" width="456" height="85" rx="20" fill="#0B0E13" stroke="#FFFFFF" stroke-opacity="0.08"/>
+<text x="1030" y="658" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="40" font-weight="800">Economies mensuelles</text>
+<rect x="990" y="708" width="210" height="3" fill="#FF5A4F"/>
+<text x="1000" y="802" fill="#FF5A4F" font-family="Arial, Helvetica, sans-serif" font-size="98" font-weight="900">-28%</text>
+<text x="1230" y="796" fill="#FFFFFF" fill-opacity="0.88" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="700">sur contrat annuel</text>
+<rect x="990" y="742" width="200" height="34" rx="17" fill="#FF5A4F" fill-opacity="0.18"/>
+<text x="1032" y="765" fill="#FFD4C7" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700">business • famille • expatriation</text>
+<text x="84" y="792" fill="#FFFFFF" fill-opacity="0.88" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700">FADLO CAR LONG TERM RENTAL</text>
+<defs>
+<linearGradient id="bg" x1="117" y1="90" x2="1454" y2="821" gradientUnits="userSpaceOnUse">
+<stop stop-color="#141518"/>
+<stop offset="0.5" stop-color="#101217"/>
+<stop offset="1" stop-color="#090909"/>
+</linearGradient>
+</defs>
+</svg>
