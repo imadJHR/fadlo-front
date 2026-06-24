@@ -31,7 +31,7 @@ export const metadata = {
   },
 }
 
-const isMaintenance = process.env.NEXT_PUBLIC_MAINTENANCE_MODE === "true"
+const isMaintenance = true
 
 export default function RootLayout({ children }) {
   return (
