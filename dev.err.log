@@ -1,10 +1,10 @@
 [baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
- ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
-(node:20528) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.
+(node:23940) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.
 (Use `node --trace-deprecation ...` to show where the warning was created)
- ⚠ Fast Refresh had to perform a full reload due to a runtime error.
- ⚠ Found a change in next.config.ts. Restarting the server to apply the changes...
-[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
- ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
-(node:20552) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.
-(Use `node --trace-deprecation ...` to show where the warning was created)
+ ⨯ The requested resource isn't a valid image for /blog/mariage-voiture.jpg received null
+ ⨯ The requested resource isn't a valid image for /blog/evenements-entreprise.jpg received null
+ ⨯ The requested resource isn't a valid image for /blog/electrique-maroc.jpg received null
+ ⨯ The requested resource isn't a valid image for /blog/entretien-luxe.jpg received null
+ ⨯ The requested resource isn't a valid image for /blog/luxe-maroc.jpg received null
+ ⨯ The requested resource isn't a valid image for /blog/longue-duree.jpg received null
+npm error A complete log of this run can be found in: C:\Users\imadj\AppData\Local\npm-cache\_logs\2026-06-18T00_05_37_319Z-debug-0.log

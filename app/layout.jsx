@@ -2,6 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google"
 import "./globals.css"
 import { LanguageProvider } from "../app/components/language-provider"
 import Script from "next/script"
+import MaintenancePage from "@/components/maintenance-page"
 
 const geistSans = Geist({
   variable: "--font-sans",
@@ -30,6 +31,8 @@ export const metadata = {
   },
 }
 
+const isMaintenance = process.env.NEXT_PUBLIC_MAINTENANCE_MODE === "true"
+
 export default function RootLayout({ children }) {
   return (
     <html lang="fr-MA" className="dark">
@@ -42,26 +45,36 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} min-h-screen font-sans antialiased bg-background selection:bg-primary selection:text-white`}
       >
         {/* Google Analytics Scripts */}
-        <Script
-          strategy="afterInteractive"
-          src="https://www.googletagmanager.com/gtag/js?id=G-45CWG9PB2H"
-        />
-        <Script
-          id="google-analytics"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
+        {!isMaintenance && (
+          <>
+            <Script
+              strategy="afterInteractive"
+              src="https://www.googletagmanager.com/gtag/js?id=G-45CWG9PB2H"
+            />
+            <Script
+              id="google-analytics"
+              strategy="afterInteractive"
+              dangerouslySetInnerHTML={{
+                __html: `
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
 
-              gtag('config', 'G-45CWG9PB2H');
-            `,
-          }}
-        />
+                  gtag('config', 'G-45CWG9PB2H');
+                `,
+              }}
+            />
+          </>
+        )}
         
-        <div className="fixed inset-0 bg-gradient-to-br from-black via-[#1a0000] to-black -z-10" />
-        <LanguageProvider>{children}</LanguageProvider>
+        {isMaintenance ? (
+          <MaintenancePage />
+        ) : (
+          <>
+            <div className="fixed inset-0 bg-gradient-to-br from-black via-[#1a0000] to-black -z-10" />
+            <LanguageProvider>{children}</LanguageProvider>
+          </>
+        )}
       </body>
     </html>
   )
