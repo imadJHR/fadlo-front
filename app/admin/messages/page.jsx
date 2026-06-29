@@ -20,7 +20,7 @@ export default function AdminMessagesPage() {
   // ---------------- Fetch Messages ----------------
   const fetchMessages = async () => {
     try {
-      const res = await fetch("https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/api/messages", {
+      const res = await fetch("https://opu52ebcxzlawndvu4qdt3ooum0dbucj.lambda-url.eu-north-1.on.aws/api/messages", {
         cache: "no-store",
       });
       const data = await res.json();

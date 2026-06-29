@@ -29,7 +29,7 @@ export default function CheckoutPage({ carData = null }) {
   const [loadingOrder, setLoadingOrder] = useState(false)
   const [orderSuccess, setOrderSuccess] = useState(false)
 
-  const API_BASE = "https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws"
+  const API_BASE = "https://opu52ebcxzlawndvu4qdt3ooum0dbucj.lambda-url.eu-north-1.on.aws"
   const API_URL = `${API_BASE}/api/vehicules/${slug}`
   const minSelectableDate = new Date()
   minSelectableDate.setHours(0, 0, 0, 0)

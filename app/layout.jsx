@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata = {
-  metadataBase: new URL("https://fadlocar.com"),
+  metadataBase: new URL("https://fadllocar.ma"),
   title: {
     default: "Fadlo Car - Location de Voiture au Maroc",
     template: "%s | Fadlo Car",
@@ -31,7 +31,7 @@ export const metadata = {
   },
 }
 
-const isMaintenance = true
+const isMaintenance = false
 
 export default function RootLayout({ children }) {
   return (

@@ -508,7 +508,7 @@ export default function ServicesClientPage() {
     "@type": "AutoRental",
     name: "Fadlo Car",
     description: "Premium car rental and chauffeur services in Casablanca, Morocco.",
-    url: "https://fadlocar.com/services",
+    url: "https://fadllocar.ma/services",
     telephone: "+212661528619",
     address: {
       "@type": "PostalAddress",

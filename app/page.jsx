@@ -4,7 +4,7 @@ const title =
   "Location Voiture Casablanca Pas Cher | Fadlo Car - Aeroport Mohammed V";
 const description =
   "Location voiture Casablanca avec Fadlo Car : citadines, SUV, berlines et voitures premium. Reservation rapide, livraison a l'aeroport Mohammed V, assurance incluse et assistance 24/7 au Maroc.";
-const canonicalUrl = "https://fadlocar.com";
+const canonicalUrl = "https://fadllocar.ma";
 
 export const metadata = {
   metadataBase: new URL(canonicalUrl),

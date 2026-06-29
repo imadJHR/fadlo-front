@@ -11,13 +11,13 @@ export const metadata = {
     "reservation voiture aeroport casablanca",
   ],
   alternates: {
-    canonical: "https://fadlocar.com/contact",
+    canonical: "https://fadllocar.ma/contact",
   },
   openGraph: {
     title: "Contact Fadlo Car | Reservation Voiture Casablanca",
     description:
       "Telephone, email et demande de devis pour votre location de voiture a Casablanca et au Maroc.",
-    url: "https://fadlocar.com/contact",
+    url: "https://fadllocar.ma/contact",
     siteName: "Fadlo Car",
     locale: "fr_MA",
     type: "website",

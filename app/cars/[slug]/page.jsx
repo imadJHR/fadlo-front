@@ -1,6 +1,6 @@
 import CarDetailsClient from "./client-page"
 
-const API_BASE = "https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws"
+const API_BASE = "https://opu52ebcxzlawndvu4qdt3ooum0dbucj.lambda-url.eu-north-1.on.aws"
 
 const getImageUrl = (img) => {
   if (!img || typeof img !== "string") return "/hero.png"
@@ -38,7 +38,7 @@ export async function generateMetadata(props) {
     const description =
       car.description ||
       `Louez ${car.nom} a Casablanca avec Fadlo Car. Tarif journalier, disponibilite, livraison aeroport et reservation rapide.`
-    const canonical = `https://fadlocar.com/cars/${slug}`
+    const canonical = `https://fadllocar.ma/cars/${slug}`
     const image = getImageUrl(car.images?.[0])
 
     return {

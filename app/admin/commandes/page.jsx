@@ -43,7 +43,7 @@ import {
 import { motion } from "framer-motion";
 
 const ORDERS_URL =
-  "https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/api/orders";
+  "https://opu52ebcxzlawndvu4qdt3ooum0dbucj.lambda-url.eu-north-1.on.aws/api/orders";
 
 const containerVariants = {
   hidden: { opacity: 0, y: 24 },

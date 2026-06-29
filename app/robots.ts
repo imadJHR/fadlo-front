@@ -8,7 +8,7 @@ export default function robots(): MetadataRoute.Robots {
         allow: "/",
       },
     ],
-    sitemap: "https://fadlocar.com/sitemap.xml",
-    host: "https://fadlocar.com",
+    sitemap: "https://fadllocar.ma/sitemap.xml",
+    host: "https://fadllocar.ma",
   };
 }

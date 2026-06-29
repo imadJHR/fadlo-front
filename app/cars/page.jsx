@@ -12,13 +12,13 @@ export const metadata = {
     "location voiture maroc premium",
   ],
   alternates: {
-    canonical: "https://fadlocar.com/cars",
+    canonical: "https://fadllocar.ma/cars",
   },
   openGraph: {
     title: "Notre Flotte | Location Voiture Casablanca - Fadlo Car",
     description:
       "Choisissez votre voiture de location a Casablanca parmi notre flotte de modeles economiques, SUV et premium.",
-    url: "https://fadlocar.com/cars",
+    url: "https://fadllocar.ma/cars",
     siteName: "Fadlo Car",
     locale: "fr_MA",
     type: "website",

@@ -51,7 +51,7 @@ import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 
 const API_BASE =
-  "https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws";
+  "https://opu52ebcxzlawndvu4qdt3ooum0dbucj.lambda-url.eu-north-1.on.aws";
 
 const particles = Array.from({ length: 24 }, (_, i) => {
   const x = (i * 37) % 100;
@@ -257,10 +257,10 @@ export default function HomePage() {
   const jsonLdBusiness = {
     "@context": "https://schema.org",
     "@type": "AutoRental",
-    "@id": "https://fadlocar.com/#business",
+    "@id": "https://fadllocar.ma/#business",
     name: "Fadlo Car",
-    image: "https://fadlocar.com/hero.png",
-    logo: "https://fadlocar.com/logo.png",
+    image: "https://fadllocar.ma/hero.png",
+    logo: "https://fadllocar.ma/logo.png",
     description:
       "Fadlo Car est une agence de location de voitures a Casablanca proposant des vehicules economiques, SUV, berlines et voitures premium avec livraison a l'aeroport Mohammed V.",
     address: {
@@ -276,7 +276,7 @@ export default function HomePage() {
       latitude: 33.5170286119286,
       longitude: -7.654152168275857,
     },
-    url: "https://fadlocar.com",
+    url: "https://fadllocar.ma",
     telephone: "+212661528619",
     priceRange: "$$",
     currenciesAccepted: "MAD, EUR",
@@ -333,7 +333,7 @@ export default function HomePage() {
         question:
           "Comment louer une voiture chez Fadlo Car à Casablanca ?",
         answer:
-          "Vous pouvez réserver en ligne sur notre site fadlocar.com, par téléphone, ou directement dans notre agence à Casablanca. Choisissez vos dates, sélectionnez votre véhicule et confirmez votre réservation en quelques clics.",
+          "Vous pouvez réserver en ligne sur notre site fadllocar.ma, par téléphone, ou directement dans notre agence à Casablanca. Choisissez vos dates, sélectionnez votre véhicule et confirmez votre réservation en quelques clics.",
       },
       {
         question:
@@ -357,7 +357,7 @@ export default function HomePage() {
       {
         question: "How can I rent a car from Fadlo Car in Casablanca?",
         answer:
-          "You can book online on our website fadlocar.com, by phone, or directly at our agency in Casablanca. Choose your dates, select your vehicle, and confirm your reservation in just a few clicks.",
+          "You can book online on our website fadllocar.ma, by phone, or directly at our agency in Casablanca. Choose your dates, select your vehicle, and confirm your reservation in just a few clicks.",
       },
       {
         question: "What documents are required for rental?",
@@ -397,13 +397,13 @@ export default function HomePage() {
   const jsonLdWebsite = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "@id": "https://fadlocar.com/#website",
+    "@id": "https://fadllocar.ma/#website",
     name: "Fadlo Car",
-    url: "https://fadlocar.com",
+    url: "https://fadllocar.ma",
     inLanguage: ["fr-MA", "en"],
     potentialAction: {
       "@type": "SearchAction",
-      target: "https://fadlocar.com/cars?search={search_term_string}",
+      target: "https://fadllocar.ma/cars?search={search_term_string}",
       "query-input": "required name=search_term_string",
     },
   };
@@ -416,7 +416,7 @@ export default function HomePage() {
         "@type": "ListItem",
         position: 1,
         name: "Accueil",
-        item: "https://fadlocar.com",
+        item: "https://fadllocar.ma",
       },
     ],
   };
@@ -428,12 +428,12 @@ export default function HomePage() {
     provider: {
       "@type": "AutoRental",
       name: "Fadlo Car",
-      url: "https://fadlocar.com",
+      url: "https://fadllocar.ma",
     },
     areaServed: ["Casablanca", "Mohammed V Airport", "Morocco"],
     availableChannel: {
       "@type": "ServiceChannel",
-      serviceUrl: "https://fadlocar.com/contact",
+      serviceUrl: "https://fadllocar.ma/contact",
       servicePhone: "+212661528619",
     },
     hasOfferCatalog: {
@@ -463,7 +463,7 @@ export default function HomePage() {
     itemListElement: featuredCars.slice(0, 6).map((car, index) => ({
       "@type": "ListItem",
       position: index + 1,
-      url: `https://fadlocar.com/cars/${car.slug || ""}`,
+      url: `https://fadllocar.ma/cars/${car.slug || ""}`,
       name: car.nom,
     })),
   };
@@ -814,7 +814,7 @@ export default function HomePage() {
               highPrice: "150",
               offerCount: featuredCars.length || 50,
               availability: "https://schema.org/InStock",
-              url: "https://fadlocar.com/cars",
+              url: "https://fadllocar.ma/cars",
             },
             aggregateRating: {
               "@type": "AggregateRating",

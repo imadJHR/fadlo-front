@@ -22,7 +22,7 @@ export const metadata = {
     title: "Premium Car Rental Services in Morocco | FADLO CAR",
     description:
       "Top-rated car rental services in Morocco: Chauffeur, Airport Transfer, Luxury Wedding Cars, Corporate Fleet & Long-Term Rentals.",
-    url: "https://fadlocar.com/services",
+    url: "https://fadllocar.ma/services",
     siteName: "FADLO CAR",
     images: [
       {
@@ -45,10 +45,10 @@ export const metadata = {
   },
 
   alternates: {
-    canonical: "https://fadlocar.com/services",
+    canonical: "https://fadllocar.ma/services",
     languages: {
-      "en-US": "https://fadlocar.com/en/services",
-      "fr-FR": "https://fadlocar.com/fr/services",
+      "en-US": "https://fadllocar.ma/en/services",
+      "fr-FR": "https://fadllocar.ma/fr/services",
     },
   },
 }

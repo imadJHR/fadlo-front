@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
 import { LockKeyhole, ShieldCheck, Sparkles, Delete } from "lucide-react";
 
 const API_BASE =
-  "https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws";
+  "https://opu52ebcxzlawndvu4qdt3ooum0dbucj.lambda-url.eu-north-1.on.aws";
 
 const keypadRows = [
   [

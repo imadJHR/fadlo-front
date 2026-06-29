@@ -13,13 +13,13 @@ export const metadata = {
     "Fadlo Car blog",
   ],
   alternates: {
-    canonical: "https://fadlocar.com/blog",
+    canonical: "https://fadllocar.ma/blog",
   },
   openGraph: {
     title: "Blog Location Voiture Casablanca | Fadlo Car",
     description:
       "Guides pratiques, tendances auto et conseils premium pour louer une voiture a Casablanca et au Maroc.",
-    url: "https://fadlocar.com/blog",
+    url: "https://fadllocar.ma/blog",
     siteName: "Fadlo Car",
     locale: "fr_MA",
     type: "website",

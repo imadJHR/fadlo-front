@@ -30,8 +30,8 @@ export default function CarDetailClientPage() {
   const [mainImage, setMainImage] = useState(null)
   const [relatedCars, setRelatedCars] = useState([])
 
-  const API_URL = `https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/api/vehicules/${slug}`
-  const RELATED_URL = `https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/api/vehicules/related/${slug}`
+  const API_URL = `https://opu52ebcxzlawndvu4qdt3ooum0dbucj.lambda-url.eu-north-1.on.aws/api/vehicules/${slug}`
+  const RELATED_URL = `https://opu52ebcxzlawndvu4qdt3ooum0dbucj.lambda-url.eu-north-1.on.aws/api/vehicules/related/${slug}`
 
   useEffect(() => {
     if (!slug) return

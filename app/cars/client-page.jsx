@@ -12,9 +12,9 @@ import { useSearchParams } from "next/navigation";
 
 export default function CarsClientPage() {
   const API_URL =
-    "https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/api/vehicules";
+    "https://opu52ebcxzlawndvu4qdt3ooum0dbucj.lambda-url.eu-north-1.on.aws/api/vehicules";
   const BRAND_API_URL =
-    "https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/api/brands";
+    "https://opu52ebcxzlawndvu4qdt3ooum0dbucj.lambda-url.eu-north-1.on.aws/api/brands";
 
   const [cars, setCars] = useState([]);
   const [loading, setLoading] = useState(true);

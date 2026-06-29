@@ -15,11 +15,11 @@ import { motion } from "framer-motion";
 import axios from "axios";
 
 const VEHICULES_URL =
-  "https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/api/vehicules";
+  "https://opu52ebcxzlawndvu4qdt3ooum0dbucj.lambda-url.eu-north-1.on.aws/api/vehicules";
 const ORDERS_URL =
-  "https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/api/orders";
+  "https://opu52ebcxzlawndvu4qdt3ooum0dbucj.lambda-url.eu-north-1.on.aws/api/orders";
 const MESSAGES_URL =
-  "https://5rzu4vcf27py33lvqrazxzyygu0qwoho.lambda-url.eu-north-1.on.aws/api/messages";
+  "https://opu52ebcxzlawndvu4qdt3ooum0dbucj.lambda-url.eu-north-1.on.aws/api/messages";
 
 const containerVariants = {
   hidden: { opacity: 0, y: 24 },

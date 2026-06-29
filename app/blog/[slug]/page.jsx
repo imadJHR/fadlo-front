@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import BlogClient from "./client-page";
 import { blogPosts } from "@/lib/blog";
 
-const baseUrl = "https://fadlocar.com";
+const baseUrl = "https://fadllocar.ma";
 
 export function generateStaticParams() {
   return blogPosts.map((post) => ({ slug: post.slug }));

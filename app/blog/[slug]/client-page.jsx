@@ -11,7 +11,7 @@ import Image from "next/image";
 export default function BlogClient({ post }) {
   const { language } = useLanguage();
   const contentRef = useRef(null);
-  const canonicalUrl = `https://fadlocar.com/blog/${post.slug}`;
+  const canonicalUrl = `https://fadllocar.ma/blog/${post.slug}`;
 
   const title = language === "fr" ? post.title_fr : post.title_en || post.title;
   const excerpt = language === "fr" ? post.excerpt_fr : post.excerpt_en || post.excerpt;
@@ -21,7 +21,7 @@ export default function BlogClient({ post }) {
     "@type": "Article",
     headline: post.title_fr || post.title,
     description: post.excerpt_fr || post.excerpt,
-    image: [`https://fadlocar.com${post.image}`],
+    image: [`https://fadllocar.ma${post.image}`],
     datePublished: post.date,
     dateModified: post.date,
     author: {
@@ -33,7 +33,7 @@ export default function BlogClient({ post }) {
       name: "Fadlo Car",
       logo: {
         "@type": "ImageObject",
-        url: "https://fadlocar.com/logo.png",
+        url: "https://fadllocar.ma/logo.png",
       },
     },
     mainEntityOfPage: canonicalUrl,
@@ -48,13 +48,13 @@ export default function BlogClient({ post }) {
         "@type": "ListItem",
         position: 1,
         name: "Accueil",
-        item: "https://fadlocar.com",
+        item: "https://fadllocar.ma",
       },
       {
         "@type": "ListItem",
         position: 2,
         name: "Blog",
-        item: "https://fadlocar.com/blog",
+        item: "https://fadllocar.ma/blog",
       },
       {
         "@type": "ListItem",
